@@ -12,23 +12,24 @@ Build-Depends: appstream-util <!nocheck>,
                gsettings-desktop-schemas-dev,
                gtk-doc-tools (>= 1.0),
                itstool,
+               libatk1.0-doc,
                libgirepository1.0-dev (>= 0.9.3),
                libglib2.0-dev (>= 2.64),
+               libglib2.0-doc,
                libgspell-1-dev (>= 1.0),
                libgtk-3-dev (>= 3.22),
+               libgtk-3-doc,
                libgtksourceview-4-dev,
+               libgtksourceview-4-doc,
                libpeas-dev (>= 1.14.1),
+               libpeas-doc,
                libxml2-dev (>= 2.5.0),
+               libxml2-utils,
                meson (>= 0.53),
                python-gi-dev (>= 3.0.0),
                python3 (>= 3.2.3),
                valac (>= 0.25.1)
-Build-Depends-Indep: libatk1.0-doc,
-                     libglib2.0-doc,
-                     libgtk-3-doc,
-                     libgtksourceview-4-doc,
-                     libpeas-doc
-Standards-Version: 4.5.1
+Standards-Version: 4.6.0
 Vcs-Browser: https://salsa.debian.org/gnome-team/gedit
 Vcs-Git: https://salsa.debian.org/gnome-team/gedit.git
 Homepage: https://wiki.gnome.org/Apps/Gedit
@@ -84,6 +85,8 @@ Architecture: any
 Section: devel
 Depends: gedit (<< ${gnome:NextVersion}),
          gedit (>= ${gnome:Version}),
+         libglib2.0-dev (>= 2.64),
+         libgtk-3-dev (>= 3.22),
          libgtksourceview-4-dev,
          libpeas-dev (>= 1.14.1),
          ${misc:Depends}

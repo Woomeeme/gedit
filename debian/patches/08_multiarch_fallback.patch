@@ -9,9 +9,11 @@ Forwarded: not-needed
  gedit/gedit-plugins-engine.c |  5 +++++
  3 files changed, 18 insertions(+)
 
+diff --git a/gedit/gedit-dirs.c b/gedit/gedit-dirs.c
+index 81f32c2..964e0a8 100644
 --- a/gedit/gedit-dirs.c
 +++ b/gedit/gedit-dirs.c
-@@ -33,6 +33,7 @@ static gchar *user_plugins_dir       = N
+@@ -33,6 +33,7 @@ static gchar *user_plugins_dir       = NULL;
  static gchar *gedit_locale_dir       = NULL;
  static gchar *gedit_lib_dir          = NULL;
  static gchar *gedit_plugins_dir      = NULL;
@@ -37,22 +39,24 @@ Forwarded: not-needed
  	g_clear_pointer (&gedit_plugins_data_dir, g_free);
  }
  
-@@ -168,6 +173,12 @@ gedit_dirs_get_gedit_plugins_dir (void)
+@@ -167,6 +172,12 @@ gedit_dirs_get_gedit_plugins_dir (void)
+ 	return gedit_plugins_dir;
  }
  
- const gchar *
++const gchar *
 +gedit_dirs_get_gedit_fallback_plugins_dir (void)
 +{
 +	return gedit_fallback_plugins_dir;
 +}
 +
-+const gchar *
+ const gchar *
  gedit_dirs_get_gedit_plugins_data_dir (void)
  {
- 	return gedit_plugins_data_dir;
+diff --git a/gedit/gedit-dirs.h b/gedit/gedit-dirs.h
+index 3fc7ab5..7f0126c 100644
 --- a/gedit/gedit-dirs.h
 +++ b/gedit/gedit-dirs.h
-@@ -46,6 +46,8 @@ const gchar	*gedit_dirs_get_gedit_lib_di
+@@ -46,6 +46,8 @@ const gchar	*gedit_dirs_get_gedit_lib_dir		(void);
  
  const gchar	*gedit_dirs_get_gedit_plugins_dir	(void);
  
@@ -61,9 +65,11 @@ Forwarded: not-needed
  const gchar	*gedit_dirs_get_gedit_plugins_data_dir	(void);
  
  G_END_DECLS
+diff --git a/gedit/gedit-plugins-engine.c b/gedit/gedit-plugins-engine.c
+index 28e6096..f47f369 100644
 --- a/gedit/gedit-plugins-engine.c
 +++ b/gedit/gedit-plugins-engine.c
-@@ -93,6 +93,11 @@ gedit_plugins_engine_init (GeditPluginsE
+@@ -93,6 +93,11 @@ gedit_plugins_engine_init (GeditPluginsEngine *engine)
  	                             gedit_dirs_get_gedit_plugins_dir (),
  	                             gedit_dirs_get_gedit_plugins_data_dir ());
  

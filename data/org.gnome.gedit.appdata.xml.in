@@ -28,7 +28,7 @@
   </screenshots>
   <url type="homepage">https://wiki.gnome.org/Apps/Gedit</url>
   <url type="bugtracker">https://gitlab.gnome.org/GNOME/gedit/issues</url>
-  <url type="donation">https://liberapay.com/gedit/</url>
+  <url type="donation">https://www.gnome.org/donate/</url>
   <url type="help">https://help.gnome.org/users/gedit/stable/</url>
   <url type="translate">https://wiki.gnome.org/TranslationProject</url>
   <update_contact>jmas@softcatala.org</update_contact>
@@ -36,6 +36,7 @@
   <translation type="gettext">gedit</translation>
   <content_rating type="oars-1.1" />
   <releases>
+    <release version="41" date="2022-02-14" />
     <release version="40.1" date="2021-04-17" />
     <release version="40.0" date="2021-03-19" />
     <release version="3.38.0" date="2020-09-11" />

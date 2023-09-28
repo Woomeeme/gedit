@@ -29,6 +29,7 @@ default. More advanced features are available by enabling plugins.
     </foaf:Person>
   </maintainer>
 
+<!-- Old maintainers
   <maintainer>
     <foaf:Person>
       <foaf:name>Jordi Mas</foaf:name>
@@ -37,7 +38,6 @@ default. More advanced features are available by enabling plugins.
     </foaf:Person>
   </maintainer>
 
-  <!-- Old maintainers
   <maintainer>
     <foaf:Person>
       <foaf:name>Paolo Maggi</foaf:name>

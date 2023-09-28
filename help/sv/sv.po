@@ -4,15 +4,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gedit\n"
-"POT-Creation-Date: 2021-03-24 15:24+0000\n"
-"PO-Revision-Date: 2021-03-24 18:12+0100\n"
+"POT-Creation-Date: 2021-08-22 11:48+0000\n"
+"PO-Revision-Date: 2021-08-22 16:47+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.0\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -38,7 +38,7 @@ msgstr "Ändra text- och bakgrundsfärgerna i gedit."
 #: C/gedit-plugins-insert-date-time.page:15 C/gedit-plugins-install.page:8
 #: C/gedit-plugins-modelines.page:13 C/gedit-plugins-pyconsole.page:10
 #: C/gedit-plugins-quick-open.page:11 C/gedit-plugins-snippets.page:9
-#: C/gedit-plugins-sort.page:14 C/gedit-printing.page:10
+#: C/gedit-plugins-sort.page:14 C/gedit-printing.page:11
 #: C/gedit-quickstart.page:12 C/gedit-replace.page:14 C/gedit-save-file.page:13
 #: C/gedit-search.page:12 C/gedit-spellcheck.page:12
 #: C/gedit-syntax-highlighting.page:10 C/gedit-tabs-moving.page:13
@@ -335,6 +335,152 @@ msgid ""
 msgstr ""
 "Då du har öppnat <app>gedit</app> med administratörsbehörighet kommer "
 "<app>gedit</app> att behålla denna behörighet tills du stänger det."
+
+#. (itstool) path: info/desc
+#: C/gedit-character-encodings.page:9
+msgid "When text and characters do not look as expected."
+msgstr "När text och tecken inte ser ut som förväntat."
+
+#. (itstool) path: credit/name
+#: C/gedit-character-encodings.page:12
+msgid "Andre Klapper"
+msgstr "Andre Klapper"
+
+#. (itstool) path: credit/year
+#: C/gedit-character-encodings.page:14
+msgid "2020"
+msgstr "2020"
+
+#. (itstool) path: credit/name
+#: C/gedit-character-encodings.page:17
+msgid "Shaun McCance"
+msgstr "Shaun McCance"
+
+#. (itstool) path: credit/year
+#: C/gedit-character-encodings.page:19
+msgid "2009"
+msgstr "2009"
+
+#. (itstool) path: page/title
+#: C/gedit-character-encodings.page:24
+msgid "Dealing with character encoding problems"
+msgstr "Hantera problem med teckenkodning"
+
+#. (itstool) path: section/title
+#: C/gedit-character-encodings.page:27
+msgid "Character encodings"
+msgstr "Teckenkodningar"
+
+#. (itstool) path: section/p
+#: C/gedit-character-encodings.page:28
+msgid ""
+"A character encoding is a specific way of recording characters internally in "
+"a computer. There are many character encodings."
+msgstr ""
+"En teckenkodning är ett specifikt sätt att lagra tecken internt i en dator. "
+"Det finns många teckenkodningar."
+
+#. (itstool) path: section/p
+#: C/gedit-character-encodings.page:30
+msgid ""
+"By default, <app>gedit</app> uses UTF-8, a modern character encoding that "
+"can handle text from most of the world's languages. Another common encoding "
+"for English and some other Western languages is ISO-8859-1."
+msgstr ""
+"Som standard använder <app>gedit</app> UTF-8, en modern teckenkodning som "
+"kan hantera text från de flesta av världens språk. En annan vanlig kodning "
+"för engelska och några andra västerländska språk är ISO-8859-1."
+
+#. (itstool) path: section/title
+#: C/gedit-character-encodings.page:36
+msgid "Problems"
+msgstr "Problem"
+
+#. (itstool) path: section/p
+#: C/gedit-character-encodings.page:37
+msgid ""
+"If you open a file in a different character encoding than the encoding in "
+"which the file was written, then some or all characters might be displayed "
+"incorrectly."
+msgstr ""
+"Om du öppnar en fil i en annan teckenkodning än kodningen som filen skrevs i "
+"så kan vissa eller alla tecken visas felaktigt."
+
+#. (itstool) path: section/p
+#: C/gedit-character-encodings.page:41
+msgid ""
+"This can happen if the file was created on another operating system or if "
+"the file uses a different script."
+msgstr ""
+"Detta kan hända om filen skapades på ett annat operativsystem eller om filen "
+"använder ett annat skriftsystem."
+
+#. (itstool) path: section/title
+#: C/gedit-character-encodings.page:46
+msgid "Solutions"
+msgstr "Lösningar"
+
+#. (itstool) path: section/p
+#: C/gedit-character-encodings.page:48
+msgid ""
+"If the content of a text file does not look as expected, <link xref=\"gedit-"
+"open-files\">open the file</link> again by choosing a different "
+"<gui>Character Encoding</gui> at the bottom of the file chooser dialog."
+msgstr ""
+"Om innehållet i en textfil inte ser ut som förväntat kan du <link xref="
+"\"gedit-open-files\">öppna filen</link> igen genom att välja en annan "
+"<gui>Teckenkodning</gui> längt ner i filväljardialogen."
+
+#. (itstool) path: section/p
+#: C/gedit-character-encodings.page:52
+msgid ""
+"If you have an idea which language is used in the document or in the area of "
+"the original author of the document:"
+msgstr ""
+"Om du har en aning om språket som används i dokumentet eller platsen för den "
+"ursprungliga författaren av dokumentet:"
+
+#. (itstool) path: item/p
+#: C/gedit-character-encodings.page:56
+msgid ""
+"Select <gui style=\"menuitem\">Add or remove…</gui> from the <gui>Character "
+"Encoding</gui> dropdown at the bottom of the file chooser dialog."
+msgstr ""
+"Välj <gui style=\"menuitem\">Lägg till eller ta bort…</gui> från "
+"rullgardinsmenyn <gui>Teckenkodning</gui> längst ner i filväljardialogen."
+
+#. (itstool) path: item/p
+#: C/gedit-character-encodings.page:59
+msgid ""
+"Select one or more languages and their encodings under <gui>Available "
+"Encodings</gui> on the left."
+msgstr ""
+"Välj ett eller flera språk och deras kodningar under <gui>Tillgängliga "
+"kodningar</gui> till vänster."
+
+#. (itstool) path: item/p
+#: C/gedit-character-encodings.page:62
+msgid ""
+"Press <gui style=\"button\">+</gui> to add the selected encodings to the "
+"<gui>Character Encoding</gui> dropdown."
+msgstr ""
+"Tryck på <gui style=\"button\">+</gui> för att lägga till de valda "
+"kodningarna till rullgardinsmenyn <gui>Teckenkodning</gui>."
+
+#. (itstool) path: item/p
+#: C/gedit-character-encodings.page:65
+msgid "Close the dialog by pressing <gui style=\"button\">Apply</gui>."
+msgstr ""
+"Stäng dialogrutan genom att trycka på <gui style=\"button\">Verkställ</gui>."
+
+#. (itstool) path: note/p
+#: C/gedit-character-encodings.page:69
+msgid ""
+"If none of these solutions solve the problem, then you could try to edit the "
+"file anyway. It is recommended to first create a backup copy of your file."
+msgstr ""
+"Om ingen av dessa lösningar löser problemet så kan du försöka redigera filen "
+"i alla fall. Du rekommenderas att först skapa en säkerhetskopia av din fil."
 
 #. (itstool) path: info/desc
 #: C/gedit-files-basic.page:7
@@ -1640,8 +1786,8 @@ msgstr ""
 
 #. (itstool) path: credit/name
 #: C/gedit-plugins-snippets.page:13 C/gedit-plugins-sort.page:18
-#: C/gedit-printing-order.page:15 C/gedit-printing.page:14
-#: C/gedit-printing-select.page:14 C/gedit-quickstart.page:16
+#: C/gedit-printing-order.page:16 C/gedit-printing.page:15
+#: C/gedit-printing-select.page:15 C/gedit-quickstart.page:16
 #: C/gedit-replace.page:22 C/gedit-save-file.page:17 C/gedit-search.page:20
 #: C/gedit-spellcheck.page:20 C/gedit-syntax-highlighting.page:14
 #: C/gedit-tabs-moving.page:21 C/gedit-tabs.page:22 C/gedit-undo-redo.page:20
@@ -2095,22 +2241,22 @@ msgid "Set the pages to print in a certain order."
 msgstr "Ställ in sidorna att skrivas ut i en speciell ordning."
 
 #. (itstool) path: credit/name
-#: C/gedit-printing-order.page:11 C/gedit-printing-select.page:10
+#: C/gedit-printing-order.page:12 C/gedit-printing-select.page:11
 msgid "Phil Bull"
 msgstr "Phil Bull"
 
 #. (itstool) path: page/title
-#: C/gedit-printing-order.page:21
+#: C/gedit-printing-order.page:22
 msgid "Getting Copies To Print In The Correct Order"
 msgstr "Få exemplar att skrivas ut i korrekt ordning"
 
 #. (itstool) path: section/title
-#: C/gedit-printing-order.page:24
+#: C/gedit-printing-order.page:25
 msgid "Reverse"
 msgstr "Omvänd ordning"
 
 #. (itstool) path: section/p
-#: C/gedit-printing-order.page:26
+#: C/gedit-printing-order.page:27
 msgid ""
 "Printers usually print the first page first, and the last page last, so the "
 "pages end up in reverse order when you pick them up. To reverse the order:"
@@ -2120,16 +2266,17 @@ msgstr ""
 "ordningen:"
 
 #. (itstool) path: item/p
-#: C/gedit-printing-order.page:32
+#: C/gedit-printing-order.page:33 C/gedit-printing-order.page:57
+#: C/gedit-printing.page:39 C/gedit-printing.page:62 C/gedit-printing.page:99
+#: C/gedit-printing-select.page:29
 msgid ""
-"Select <guiseq><gui style=\"menu\">File</gui> <gui style=\"menuitem\">Print</"
-"gui></guiseq>."
+"Press the menu button in the top-right corner of the window and select the "
+"Print button."
 msgstr ""
-"Välj <guiseq><gui style=\"menu\">Arkiv</gui> <gui style=\"menuitem\">Skriv "
-"ut</gui></guiseq>."
+"Tryck på menyknappen i fönstrets övre högra hörn och välj utskriftsknappen."
 
 #. (itstool) path: item/p
-#: C/gedit-printing-order.page:36
+#: C/gedit-printing-order.page:37
 msgid ""
 "In the <gui style=\"tab\">General</gui> tab of the Print dialog under <gui "
 "style=\"group\">Copies</gui>, check <gui style=\"checkbox\">Reverse</gui>."
@@ -2138,18 +2285,18 @@ msgstr ""
 "style=\"group\">Kopior</gui>, kryssa i <gui style=\"checkbox\">Omvänd</gui>."
 
 #. (itstool) path: section/p
-#: C/gedit-printing-order.page:42
+#: C/gedit-printing-order.page:43
 msgid "The last page will be printed first, and so on."
 msgstr "Den sista sidan kommer att skrivas ut först o.s.v."
 
 #. (itstool) path: section/title
-#: C/gedit-printing-order.page:46
+#: C/gedit-printing-order.page:47
 msgid "Collate"
 msgstr "Sortera"
 
 # TODO: e.g -> i.e
 #. (itstool) path: section/p
-#: C/gedit-printing-order.page:48
+#: C/gedit-printing-order.page:49
 msgid ""
 "If you are printing more than one copy of the document, the print outs will "
 "be grouped by page number by default. (e.g. The copies of page one come out, "
@@ -2162,21 +2309,12 @@ msgstr ""
 "att få varje exemplar att komma ut med dess sidor grupperade ihop."
 
 #. (itstool) path: section/p
-#: C/gedit-printing-order.page:53
+#: C/gedit-printing-order.page:54
 msgid "To Collate:"
 msgstr "För att sortera:"
 
 #. (itstool) path: item/p
-#: C/gedit-printing-order.page:56
-msgid ""
-"Click <guiseq><gui style=\"menu\">File</gui> <gui style=\"menuitem\">Print</"
-"gui></guiseq>."
-msgstr ""
-"Klicka <guiseq><gui style=\"menu\">Arkiv</gui> <gui style=\"menuitem\">Skriv "
-"ut</gui></guiseq>."
-
-#. (itstool) path: item/p
-#: C/gedit-printing-order.page:60
+#: C/gedit-printing-order.page:61
 msgid ""
 "In the <gui style=\"tab\">General</gui> tab of the Print dialog under <gui "
 "style=\"group\">Copies</gui> check <gui style=\"checkbox\">Collate</gui>."
@@ -2190,12 +2328,12 @@ msgid "Print the files that you create with gedit."
 msgstr "Skriv ut filerna som du skapar med gedit."
 
 #. (itstool) path: page/title
-#: C/gedit-printing.page:20
+#: C/gedit-printing.page:21
 msgid "Printing documents"
 msgstr "Skriva ut dokument"
 
 #. (itstool) path: note/p
-#: C/gedit-printing.page:23
+#: C/gedit-printing.page:24
 msgid ""
 "Printing with <app>gedit</app> requires that you have connected and "
 "configured your printer. If you have not done this, please consult the <link "
@@ -2206,17 +2344,17 @@ msgstr ""
 "\"help:gnome-help/printing\">utskriftshjälpen för GNOME</link>."
 
 #. (itstool) path: page/p
-#: C/gedit-printing.page:28
+#: C/gedit-printing.page:29
 msgid "<app>gedit</app> allows you to print both to a file and to paper."
 msgstr "<app>gedit</app> låter dig både skriva ut till en fil och på papper."
 
 #. (itstool) path: section/title
-#: C/gedit-printing.page:31
+#: C/gedit-printing.page:32
 msgid "Print Preview"
 msgstr "Förhandsvisa utskrift"
 
 #. (itstool) path: section/p
-#: C/gedit-printing.page:33
+#: C/gedit-printing.page:34
 msgid ""
 "Prior to printing your document, you can preview how the printed document "
 "will look by using <gui>Print Preview</gui>. To preview the document:"
@@ -2226,18 +2364,12 @@ msgstr ""
 "förhandsvisa dokumentet:"
 
 #. (itstool) path: item/p
-#: C/gedit-printing.page:38
-msgid ""
-"Select <guiseq><gui style=\"menu\">File</gui> <gui style=\"menuitem\">Print "
-"Preview</gui></guiseq>. Alternatively, you can press <keyseq><key>Shift</"
-"key><key>Ctrl</key> <key>P</key></keyseq>."
-msgstr ""
-"Välj <guiseq><gui style=\"menu\">Arkiv</gui> <gui style=\"menuitem"
-"\">Förhandsvisa utskrift</gui></guiseq>. Alternativt kan du trycka "
-"<keyseq><key>Skift</key><key>Ctrl</key> <key>P</key></keyseq>."
+#: C/gedit-printing.page:43
+msgid "Press <gui style=\"button\">Preview</gui>."
+msgstr "Tryck på <gui style=\"button\">Förhandsvisa</gui>."
 
 #. (itstool) path: section/p
-#: C/gedit-printing.page:45
+#: C/gedit-printing.page:47
 msgid ""
 "A preview of your document will open in the same tab as the file. You can "
 "browse this preview with help of navigation buttons and tools in the toolbar "
@@ -2251,12 +2383,12 @@ msgstr ""
 "dokumentet klicka på <gui style=\"button\">Stäng förhandsvisning</gui>."
 
 #. (itstool) path: section/title
-#: C/gedit-printing.page:53
+#: C/gedit-printing.page:55
 msgid "Printing To Paper"
 msgstr "Utskrift på papper"
 
 #. (itstool) path: section/p
-#: C/gedit-printing.page:55
+#: C/gedit-printing.page:57
 msgid ""
 "You can print your documents to paper using a local or remote printer. To "
 "print a file:"
@@ -2265,29 +2397,18 @@ msgstr ""
 "fjärrskrivare. För att skriva ut en fil:"
 
 #. (itstool) path: item/p
-#: C/gedit-printing.page:60
+#: C/gedit-printing.page:66
 msgid ""
-"Select <guiseq><gui style=\"menu\">File</gui> <gui style=\"menuitem\">Print</"
-"gui> <gui style=\"tab\">General</gui></guiseq>."
+"In the <gui style=\"tab\">General</gui> tab, select the desired printer from "
+"the list of printers available."
 msgstr ""
-"Välj <guiseq><gui style=\"menu\">Arkiv</gui> <gui style=\"menuitem\">Skriv "
-"ut</gui> <gui style=\"tab\">Allmänt</gui></guiseq>."
+"I fliken <gui style=\"tab\">Allmänt</gui>, välj den önskade skrivaren från "
+"listan över tillgängliga skrivare."
 
 #. (itstool) path: item/p
-#: C/gedit-printing.page:65
-msgid "Select the desired printer from the list of printers available."
-msgstr "Välj den önskade skrivaren från listan av tillgängliga skrivare."
-
-#. (itstool) path: item/p
-#: C/gedit-printing.page:68
-msgid ""
-"You can preview the file using <gui style=\"button\">Print Preview</gui> and "
-"once you are satisfied with the settings, click <gui style=\"button\">Print</"
-"gui> to send the file to printer."
-msgstr ""
-"Du kan förhandsgranska filen med <gui style=\"button\">Förhandsvisa</gui>, "
-"och då du är nöjd med inställningarna kan du klicka <gui style=\"button"
-"\">Skriv ut</gui> för att sända filen till skrivaren."
+#: C/gedit-printing.page:70 C/gedit-printing.page:121
+msgid "Press <gui style=\"button\">Print</gui>."
+msgstr "Tryck på <gui style=\"button\">Skriv ut</gui>."
 
 #. (itstool) path: section/p
 #: C/gedit-printing.page:74
@@ -2327,47 +2448,39 @@ msgstr "Utskrift till fil"
 #: C/gedit-printing.page:94
 msgid ""
 "You can also use <app>gedit</app> to print to a file. To print your document "
-"to file of a different format:"
+"to a file of a different format:"
 msgstr ""
 "Du kan också använda <app>gedit</app> för att skriva ut till en fil. För att "
 "skriva ut ditt dokument till en fil med ett annat format:"
 
 #. (itstool) path: item/p
-#: C/gedit-printing.page:99
+#: C/gedit-printing.page:103
 msgid ""
-"Select <guiseq><gui style=\"menu\">File</gui> <gui style=\"menuitem\">Print</"
-"gui> <gui style=\"menuitem\">Print to File</gui></guiseq>."
+"In the <gui style=\"tab\">General</gui> tab, select <gui>Print to File</gui> "
+"from the list of printers available."
 msgstr ""
-"Välj <guiseq><gui style=\"menu\">Arkiv</gui> <gui style=\"menuitem\">Skriv "
-"ut</gui> <gui style=\"menuitem\">Skriv ut till fil</gui></guiseq>."
+"I fliken <gui style=\"tab\">Allmänt</gui>, välj <gui>Skriv ut till fil</gui> "
+"från listan över tillgängliga skrivare."
 
 #. (itstool) path: item/p
-#: C/gedit-printing.page:104
-msgid ""
-"Printing is enabled for the following file formats, you may select from:"
-msgstr "Utskrift är aktiverad för följande filformat, du kan välja bland:"
+#: C/gedit-printing.page:107
+msgid "Select an output format:"
+msgstr "Välj ett utdataformat:"
 
 #. (itstool) path: item/p
-#: C/gedit-printing.page:108
+#: C/gedit-printing.page:110
 msgid "Portable Document Format (.pdf)"
 msgstr "Portable Document Format (.pdf)"
 
 #. (itstool) path: item/p
-#: C/gedit-printing.page:111
+#: C/gedit-printing.page:113
 msgid "PostScript (.ps)"
 msgstr "Postscript (.ps)"
 
 #. (itstool) path: item/p
-#: C/gedit-printing.page:114
+#: C/gedit-printing.page:116
 msgid "Scalable Vector Graphic (.svg)"
 msgstr "Scalable Vector Graphic (.svg)"
-
-#. (itstool) path: item/p
-#: C/gedit-printing.page:119
-msgid "To print the document to file, click <gui style=\"button\">Print</gui>."
-msgstr ""
-"För att skriva ut dokumentet till en fil, klicka på <gui style=\"button"
-"\">Skriv ut</gui>."
 
 #. (itstool) path: info/desc
 #: C/gedit-printing-select.page:7
@@ -2375,12 +2488,12 @@ msgid "Choose the pages that you want to print."
 msgstr "Välj de sidor som du vill skriva ut."
 
 #. (itstool) path: page/title
-#: C/gedit-printing-select.page:20
+#: C/gedit-printing-select.page:21
 msgid "Only print certain pages"
 msgstr "Skriv bara ut vissa sidor"
 
 #. (itstool) path: page/p
-#: C/gedit-printing-select.page:22
+#: C/gedit-printing-select.page:23
 msgid ""
 "You can selectively print only certain pages from the document. For example, "
 "if you enter the page numbers \"1,3,5-7,9\", then only pages 1, 3, 5, 6, 7 "
@@ -2391,16 +2504,7 @@ msgstr ""
 "9 att skrivas ut. För att skriva ut dina önskade sidor:"
 
 #. (itstool) path: item/p
-#: C/gedit-printing-select.page:28
-msgid ""
-"Select <guiseq><gui style=\"menu\">File</gui> <gui style=\"menuitem\">Print…"
-"</gui></guiseq>."
-msgstr ""
-"Välj <guiseq><gui style=\"menu\">Arkiv</gui> <gui style=\"menuitem\">Skriv "
-"ut…</gui></guiseq>."
-
-#. (itstool) path: item/p
-#: C/gedit-printing-select.page:32
+#: C/gedit-printing-select.page:33
 msgid ""
 "In the <gui style=\"tab\">General</gui> tab in the Print dialog choose <gui "
 "style=\"radiobutton\">Pages</gui> from the <gui style=\"group\">Range</gui> "
@@ -2411,7 +2515,7 @@ msgstr ""
 "\">Intervall</gui>."
 
 #. (itstool) path: item/p
-#: C/gedit-printing-select.page:36
+#: C/gedit-printing-select.page:37
 msgid ""
 "Type the numbers of the pages you want to print from the document, separated "
 "by commas. Use a dash to specify a range of pages."
@@ -3163,14 +3267,14 @@ msgid ""
 "If you are working with multiple tabs in <app>gedit</app> you can group "
 "them, making it easier to keep your opened files organized. Adding a new tab "
 "group will divide the <app>gedit</app> window in two panes, open a new "
-"“Untitled File” in the new pane, and make it active. You can open files into "
-"that tab group and move tabs from one tab group to another."
+"“Untitled Document” in the new pane, and make it active. You can open files "
+"into that tab group and move tabs from one tab group to another."
 msgstr ""
 "Om du arbetar med flera flikar i <app>gedit</app> kan du gruppera dem vilket "
 "gör det lättare att hålla dina öppnade filer organiserade. Att lägga till en "
-"ny flikgrupp kommer dela <app>gedit</app>-fönstret i två paneler, öppna en "
-"ny ”Namnlös fil” i den nya panelen, och göra den aktiv. Du kan öppna filer "
-"till den flikgruppen och flytta flikar från en flikgrupp till en annan."
+"ny flikgrupp kommer dela <app>gedit</app>-fönstret i två paneler, öppna ett "
+"nytt ”Namnlöst dokument” i den nya panelen, och göra den aktiv. Du kan öppna "
+"filer till den flikgruppen och flytta flikar från en flikgrupp till en annan."
 
 #. (itstool) path: section/title
 #: C/gedit-tab-groups.page:31
@@ -3529,3 +3633,64 @@ msgstr "Creative Commons Erkännande-DelaLika 3.0 Unported"
 #: C/legal.xml:3
 msgid "This work is licensed under a <_:link-1/>."
 msgstr "Det här programmet är licensierat under licensen <_:link-1/>."
+
+#~ msgid "Creative Commons Share Alike 3.0"
+#~ msgstr "Creative Commons DelaLika 3.0"
+
+#~ msgid ""
+#~ "Select <guiseq><gui style=\"menu\">File</gui> <gui style=\"menuitem"
+#~ "\">Print</gui></guiseq>."
+#~ msgstr ""
+#~ "Välj <guiseq><gui style=\"menu\">Arkiv</gui> <gui style=\"menuitem"
+#~ "\">Skriv ut</gui></guiseq>."
+
+#~ msgid ""
+#~ "Click <guiseq><gui style=\"menu\">File</gui> <gui style=\"menuitem"
+#~ "\">Print</gui></guiseq>."
+#~ msgstr ""
+#~ "Klicka <guiseq><gui style=\"menu\">Arkiv</gui> <gui style=\"menuitem"
+#~ "\">Skriv ut</gui></guiseq>."
+
+#~ msgid ""
+#~ "Select <guiseq><gui style=\"menu\">File</gui> <gui style=\"menuitem"
+#~ "\">Print Preview</gui></guiseq>. Alternatively, you can press "
+#~ "<keyseq><key>Shift</key><key>Ctrl</key> <key>P</key></keyseq>."
+#~ msgstr ""
+#~ "Välj <guiseq><gui style=\"menu\">Arkiv</gui> <gui style=\"menuitem"
+#~ "\">Förhandsvisa utskrift</gui></guiseq>. Alternativt kan du trycka "
+#~ "<keyseq><key>Skift</key><key>Ctrl</key> <key>P</key></keyseq>."
+
+#~ msgid ""
+#~ "Select <guiseq><gui style=\"menu\">File</gui> <gui style=\"menuitem"
+#~ "\">Print</gui> <gui style=\"tab\">General</gui></guiseq>."
+#~ msgstr ""
+#~ "Välj <guiseq><gui style=\"menu\">Arkiv</gui> <gui style=\"menuitem"
+#~ "\">Skriv ut</gui> <gui style=\"tab\">Allmänt</gui></guiseq>."
+
+#~ msgid ""
+#~ "You can preview the file using <gui style=\"button\">Print Preview</gui> "
+#~ "and once you are satisfied with the settings, click <gui style=\"button"
+#~ "\">Print</gui> to send the file to printer."
+#~ msgstr ""
+#~ "Du kan förhandsgranska filen med <gui style=\"button\">Förhandsvisa</"
+#~ "gui>, och då du är nöjd med inställningarna kan du klicka <gui style="
+#~ "\"button\">Skriv ut</gui> för att sända filen till skrivaren."
+
+#~ msgid ""
+#~ "Select <guiseq><gui style=\"menu\">File</gui> <gui style=\"menuitem"
+#~ "\">Print</gui> <gui style=\"menuitem\">Print to File</gui></guiseq>."
+#~ msgstr ""
+#~ "Välj <guiseq><gui style=\"menu\">Arkiv</gui> <gui style=\"menuitem"
+#~ "\">Skriv ut</gui> <gui style=\"menuitem\">Skriv ut till fil</gui></"
+#~ "guiseq>."
+
+#~ msgid ""
+#~ "Printing is enabled for the following file formats, you may select from:"
+#~ msgstr "Utskrift är aktiverad för följande filformat, du kan välja bland:"
+
+#~ msgid ""
+#~ "Select <guiseq><gui style=\"menu\">File</gui> <gui style=\"menuitem"
+#~ "\">Print…</gui></guiseq>."
+#~ msgstr ""
+#~ "Välj <guiseq><gui style=\"menu\">Arkiv</gui> <gui style=\"menuitem"
+#~ "\">Skriv ut…</gui></guiseq>."

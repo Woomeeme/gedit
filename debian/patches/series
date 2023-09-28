@@ -1,2 +1,2 @@
 08_multiarch_fallback.patch
-upstream-fa587e0-deteplification.patch
+fix_ftbfs_nonlinux.patch
