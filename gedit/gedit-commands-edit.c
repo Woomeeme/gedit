@@ -30,7 +30,6 @@
 #include "gedit-window.h"
 #include "gedit-debug.h"
 #include "gedit-view.h"
-#include "gedit-preferences-dialog.h"
 
 void
 _gedit_cmd_edit_undo (GSimpleAction *action,
@@ -44,13 +43,13 @@ _gedit_cmd_edit_undo (GSimpleAction *action,
 	gedit_debug (DEBUG_COMMANDS);
 
 	active_view = gedit_window_get_active_view (window);
-	g_return_if_fail (active_view);
+	g_return_if_fail (active_view != NULL);
 
 	active_document = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (active_view)));
 
 	gtk_source_buffer_undo (active_document);
 
-	gedit_view_scroll_to_cursor (active_view);
+	tepl_view_scroll_to_cursor (TEPL_VIEW (active_view));
 
 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
 }
@@ -67,13 +66,13 @@ _gedit_cmd_edit_redo (GSimpleAction *action,
 	gedit_debug (DEBUG_COMMANDS);
 
 	active_view = gedit_window_get_active_view (window);
-	g_return_if_fail (active_view);
+	g_return_if_fail (active_view != NULL);
 
 	active_document = GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (active_view)));
 
 	gtk_source_buffer_redo (active_document);
 
-	gedit_view_scroll_to_cursor (active_view);
+	tepl_view_scroll_to_cursor (TEPL_VIEW (active_view));
 
 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
 }
@@ -89,9 +88,9 @@ _gedit_cmd_edit_cut (GSimpleAction *action,
 	gedit_debug (DEBUG_COMMANDS);
 
 	active_view = gedit_window_get_active_view (window);
-	g_return_if_fail (active_view);
+	g_return_if_fail (active_view != NULL);
 
-	gedit_view_cut_clipboard (active_view);
+	tepl_view_cut_clipboard (TEPL_VIEW (active_view));
 
 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
 }
@@ -107,9 +106,9 @@ _gedit_cmd_edit_copy (GSimpleAction *action,
 	gedit_debug (DEBUG_COMMANDS);
 
 	active_view = gedit_window_get_active_view (window);
-	g_return_if_fail (active_view);
+	g_return_if_fail (active_view != NULL);
 
-	gedit_view_copy_clipboard (active_view);
+	tepl_view_copy_clipboard (TEPL_VIEW (active_view));
 
 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
 }
@@ -125,9 +124,9 @@ _gedit_cmd_edit_paste (GSimpleAction *action,
 	gedit_debug (DEBUG_COMMANDS);
 
 	active_view = gedit_window_get_active_view (window);
-	g_return_if_fail (active_view);
+	g_return_if_fail (active_view != NULL);
 
-	gedit_view_paste_clipboard (active_view);
+	tepl_view_paste_clipboard (TEPL_VIEW (active_view));
 
 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
 }
@@ -143,9 +142,9 @@ _gedit_cmd_edit_delete (GSimpleAction *action,
 	gedit_debug (DEBUG_COMMANDS);
 
 	active_view = gedit_window_get_active_view (window);
-	g_return_if_fail (active_view);
+	g_return_if_fail (active_view != NULL);
 
-	gedit_view_delete_selection (active_view);
+	tepl_view_delete_selection (TEPL_VIEW (active_view));
 
 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
 }
@@ -161,23 +160,11 @@ _gedit_cmd_edit_select_all (GSimpleAction *action,
 	gedit_debug (DEBUG_COMMANDS);
 
 	active_view = gedit_window_get_active_view (window);
-	g_return_if_fail (active_view);
+	g_return_if_fail (active_view != NULL);
 
-	gedit_view_select_all (active_view);
+	tepl_view_select_all (TEPL_VIEW (active_view));
 
 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
-}
-
-void
-_gedit_cmd_edit_preferences (GSimpleAction *action,
-                             GVariant      *parameter,
-                             gpointer       user_data)
-{
-	GeditWindow *window = GEDIT_WINDOW (user_data);
-
-	gedit_debug (DEBUG_COMMANDS);
-
-	gedit_show_preferences_dialog (window);
 }
 
 void
@@ -200,6 +187,3 @@ _gedit_cmd_edit_overwrite_mode (GSimpleAction *action,
 	gtk_text_view_set_overwrite (GTK_TEXT_VIEW (active_view), overwrite);
 	gtk_widget_grab_focus (GTK_WIDGET (active_view));
 }
-
-
-/* ex:set ts=8 noet: */

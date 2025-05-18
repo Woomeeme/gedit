@@ -1258,7 +1258,7 @@ filter_glob (GeditFileBrowserWidget *obj,
 	if (FILE_IS_DIR (flags) || FILE_IS_DUMMY (flags))
 		result = TRUE;
 	else
-		result = g_pattern_match_string (obj->priv->filter_pattern, name);
+		result = g_pattern_spec_match_string (obj->priv->filter_pattern, name);
 
 	g_free (name);
 	return result;
@@ -1751,7 +1751,7 @@ gedit_file_browser_widget_add_filter (GeditFileBrowserWidget           *obj,
 				      gpointer                          user_data,
 				      GDestroyNotify                    notify)
 {
-	FilterFunc *f = filter_func_new (obj, func, user_data, notify);;
+	FilterFunc *f = filter_func_new (obj, func, user_data, notify);
 	GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW (obj->priv->treeview));
 
 	obj->priv->filter_funcs = g_slist_append (obj->priv->filter_funcs, f);
@@ -2294,9 +2294,11 @@ directory_open (GeditFileBrowserWidget *obj,
 	if (FILE_IS_DIR (flags) && location)
 	{
 		gchar *uri = g_file_get_uri (location);
+		GtkWindow *window = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (obj)));
+
 		result = TRUE;
 
-		if (!gtk_show_uri_on_window (GTK_WINDOW (obj), uri, GDK_CURRENT_TIME, &error))
+		if (!gtk_show_uri_on_window (window, uri, GDK_CURRENT_TIME, &error))
 		{
 			g_signal_emit (obj, signals[ERROR], 0,
 				       GEDIT_FILE_BROWSER_ERROR_OPEN_DIRECTORY,

@@ -1,4 +1,4 @@
-libfilebrowser_public_h = files(
+plugin_filebrowser_headers = files(
   'gedit-file-bookmarks-store.h',
   'gedit-file-browser-error.h',
   'gedit-file-browser-store.h',
@@ -9,7 +9,7 @@ libfilebrowser_public_h = files(
   'gedit-file-browser-messages.h',
 )
 
-libfilebrowser_sources = files(
+plugin_filebrowser_c_files = files(
   'gedit-file-bookmarks-store.c',
   'gedit-file-browser-messages.c',
   'gedit-file-browser-plugin.c',
@@ -19,22 +19,18 @@ libfilebrowser_sources = files(
   'gedit-file-browser-widget.c',
 )
 
-libfilebrowser_deps = [
-  libgedit_dep,
-]
-
 subdir('messages')
 
-libfilebrowser_register_enums = gnome.mkenums(
+plugin_filebrowser_register_enums = gnome.mkenums(
   'gedit-file-browser-enum-register',
-  sources: libfilebrowser_public_h,
+  sources: plugin_filebrowser_headers,
   c_template: 'gedit-file-browser-enum-register.c.template',
 )
 
-libfilebrowser_type_enums = gnome.mkenums(
+plugin_filebrowser_type_enums = gnome.mkenums(
   'gedit-file-browser-enum-types',
-  depends : [libfilebrowser_register_enums],
-  sources: libfilebrowser_public_h,
+  depends : plugin_filebrowser_register_enums,
+  sources: plugin_filebrowser_headers,
   h_template: 'gedit-file-browser-enum-types.h.template',
   c_template: 'gedit-file-browser-enum-types-stage1.c.template',
 )
@@ -44,39 +40,36 @@ libfilebrowser_type_enums = gnome.mkenums(
 cat = find_program('cat')
 
 # Combine the 2 C mkenums templates together before compiling
-libfilebrowser_enums_c = custom_target('libfilebrowser_enums_c',
-  input: [libfilebrowser_type_enums.get(0),
-          libfilebrowser_register_enums],
+plugin_filebrowser_enums_c = custom_target('plugin_filebrowser_enums_c',
+  input: [plugin_filebrowser_type_enums[0],
+          plugin_filebrowser_register_enums],
   output: 'gedit-file-browser-enum-types.c',
   command: [cat, '@INPUT0@', '@INPUT1@'],
   # redirects the command output since we can't use >> here
   capture: true,
 )
 
-libfilebrowser_sources += [
-  libfilebrowser_enums_c,
-  libfilebrowser_type_enums.get(1),
+plugin_filebrowser_c_files += [
+  plugin_filebrowser_enums_c,
+  plugin_filebrowser_type_enums[1],
 ]
 
 subdir('resources')
 
-libfilebrowser_sha = shared_module(
+shared_module(
   'filebrowser',
-  sources: libfilebrowser_sources,
+  sources: plugin_filebrowser_c_files,
   include_directories: root_include_dir,
-  dependencies: libfilebrowser_deps,
+  dependencies: libgedit_dep,
   install: true,
-  install_dir: join_paths(
-    pkglibdir,
-    'plugins',
-  ),
+  install_dir: get_option('libdir') / 'gedit/plugins',
   name_suffix: module_suffix,
 )
 
 # FIXME: https://github.com/mesonbuild/meson/issues/1687
 custom_target(
   'org.gnome.gedit.plugins.filebrowser.enums.xml',
-  input : libfilebrowser_sources + libfilebrowser_public_h,
+  input : plugin_filebrowser_c_files + plugin_filebrowser_headers,
   output: 'org.gnome.gedit.plugins.filebrowser.enums.xml',
   capture: true,
   command: [
@@ -90,16 +83,13 @@ custom_target(
     '@INPUT@'
   ],
   install: true,
-  install_dir: join_paths(
-    glibdir,
-    'schemas',
-  )
+  install_dir: get_option('datadir') / 'glib-2.0/schemas',
 )
 
-filebrowser_gschema_file = files('org.gnome.gedit.plugins.filebrowser.gschema.xml')
+plugin_filebrowser_gschema_file = files('org.gnome.gedit.plugins.filebrowser.gschema.xml')
 install_data(
-  filebrowser_gschema_file,
-  install_dir: join_paths(get_option('prefix'), get_option('datadir'), 'glib-2.0/schemas')
+  plugin_filebrowser_gschema_file,
+  install_dir: get_option('datadir') / 'glib-2.0/schemas',
 )
 
 if xmllint.found()
@@ -109,7 +99,7 @@ if xmllint.found()
     args: [
       '--noout',
       '--dtdvalid', gschema_dtd,
-      filebrowser_gschema_file,
+      plugin_filebrowser_gschema_file,
     ]
   )
 endif
@@ -120,8 +110,5 @@ custom_target(
   output: 'filebrowser.plugin',
   command: msgfmt_plugin_cmd,
   install: true,
-  install_dir: join_paths(
-    pkglibdir,
-    'plugins',
-  )
+  install_dir: get_option('libdir') / 'gedit/plugins',
 )

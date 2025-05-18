@@ -1,0 +1,26 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      xmlns:its="http://www.w3.org/2005/11/its"
+      type="topic"
+      id="gedit-open-file">
+
+  <info>
+    <link type="guide" xref="gedit-files-basic" group="second" />
+    <link type="seealso" xref="gedit-open-several-files-at-once" />
+    <desc>Open a file to start working on it.</desc>
+  </info>
+
+  <title>Open a file</title>
+
+  <p>
+    To open a file in <app>gedit</app>, click the <gui>Open</gui> button.
+  </p>
+  <p>
+    This will cause the <gui>Open</gui> dialog to appear. Use your mouse or
+    keyboard to select the file that you wish to open, and then click
+    <gui>Open</gui>.
+  </p>
+  <p>
+    To close the <gui>Open</gui> dialog without opening a file, click
+    <gui>Cancel</gui>.
+  </p>
+</page>

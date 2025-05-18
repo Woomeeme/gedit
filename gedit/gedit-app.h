@@ -1,5 +1,4 @@
 /*
- * gedit-app.h
  * This file is part of gedit
  *
  * Copyright (C) 2005 - Paolo Maggi
@@ -21,59 +20,53 @@
 #ifndef GEDIT_APP_H
 #define GEDIT_APP_H
 
-#include <gtk/gtk.h>
 #include <gedit/gedit-window.h>
 
 G_BEGIN_DECLS
 
 #define GEDIT_TYPE_APP (gedit_app_get_type())
 
-G_DECLARE_DERIVABLE_TYPE (GeditApp, gedit_app, GEDIT, APP, GtkApplication)
+G_DECLARE_DERIVABLE_TYPE (GeditApp, gedit_app,
+			  GEDIT, APP,
+			  GtkApplication)
 
 struct _GeditAppClass
 {
 	GtkApplicationClass parent_class;
 
 	gboolean (*show_help)                   (GeditApp    *app,
-	                                         GtkWindow   *parent,
-	                                         const gchar *name,
-	                                         const gchar *link_id);
+	                                         GtkWindow   *parent_window,
+	                                         const gchar *name_of_user_manual,
+	                                         const gchar *link_id_within_user_manual);
 
-	gchar *(*help_link_id)                  (GeditApp    *app,
-	                                         const gchar *name,
-	                                         const gchar *link_id);
+	gchar *(*get_help_uri)                  (GeditApp    *app,
+	                                         const gchar *name_of_user_manual,
+	                                         const gchar *link_id_within_user_manual);
 
 	void (*set_window_title)                (GeditApp    *app,
 	                                         GeditWindow *window,
 	                                         const gchar *title);
 
-	GeditWindow *(*create_window)           (GeditApp    *app);
+	GeditWindow *(*create_window)           (GeditApp *app);
 
 	gboolean (*process_window_event)        (GeditApp    *app,
 	                                         GeditWindow *window,
 	                                         GdkEvent    *event);
 };
 
-GeditWindow	*gedit_app_create_window		(GeditApp    *app,
-							 GdkScreen   *screen);
+GeditWindow *	gedit_app_create_window		(GeditApp  *app,
+						 GdkScreen *screen);
 
-GList		*gedit_app_get_main_windows		(GeditApp    *app);
+GList *		gedit_app_get_main_windows	(GeditApp *app);
 
-GList		*gedit_app_get_documents		(GeditApp    *app);
+GList *		gedit_app_get_documents		(GeditApp *app);
 
-GList		*gedit_app_get_views			(GeditApp    *app);
+GList *		gedit_app_get_views		(GeditApp *app);
 
-gboolean	 gedit_app_show_help			(GeditApp    *app,
-                                                         GtkWindow   *parent,
-                                                         const gchar *name,
-                                                         const gchar *link_id);
-
-void		 gedit_app_set_window_title		(GeditApp    *app,
-                                                         GeditWindow *window,
-                                                         const gchar *title);
-gboolean	gedit_app_process_window_event		(GeditApp    *app,
-							 GeditWindow *window,
-							 GdkEvent    *event);
+gboolean	gedit_app_show_help		(GeditApp    *app,
+						 GtkWindow   *parent_window,
+						 const gchar *name_of_user_manual,
+						 const gchar *link_id_within_user_manual);
 
 G_END_DECLS
 

@@ -28,15 +28,9 @@
 
 G_BEGIN_DECLS
 
-#ifdef G_OS_WIN32
-#define GEDIT_METADATA_ATTRIBUTE_POSITION "position"
-#define GEDIT_METADATA_ATTRIBUTE_ENCODING "encoding"
-#define GEDIT_METADATA_ATTRIBUTE_LANGUAGE "language"
-#else
-#define GEDIT_METADATA_ATTRIBUTE_POSITION "metadata::gedit-position"
-#define GEDIT_METADATA_ATTRIBUTE_ENCODING "metadata::gedit-encoding"
-#define GEDIT_METADATA_ATTRIBUTE_LANGUAGE "metadata::gedit-language"
-#endif
+#define GEDIT_METADATA_ATTRIBUTE_POSITION "gedit-position"
+#define GEDIT_METADATA_ATTRIBUTE_ENCODING "gedit-encoding"
+#define GEDIT_METADATA_ATTRIBUTE_LANGUAGE "gedit-language"
 
 G_GNUC_INTERNAL
 glong		_gedit_document_get_seconds_since_last_save_or_load	(GeditDocument *doc);
@@ -55,7 +49,7 @@ G_GNUC_INTERNAL
 gboolean	_gedit_document_get_create				(GeditDocument *doc);
 
 G_GNUC_INTERNAL
-gchar *		_gedit_document_get_uri_for_display			(GeditDocument *doc);
+gboolean	_gedit_document_is_untitled				(GeditDocument       *doc);
 
 G_END_DECLS
 

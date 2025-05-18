@@ -14,9 +14,10 @@
     <value nick="always" value="3"/>
   </enum>
 
-  <enum id="org.gnome.gedit.BackgroundPatternType">
-    <value nick="none" value="0"/>
-    <value nick="grid" value="1"/>
+  <enum id="org.gnome.gedit.ThemeVariant">
+    <value nick="system" value="0"/>
+    <value nick="light" value="1"/>
+    <value nick="dark" value="2"/>
   </enum>
 
   <schema id="org.gnome.gedit" path="/org/gnome/gedit/">
@@ -42,10 +43,15 @@
       <summary>Editor Font</summary>
       <description>A custom font that will be used for the editing area. This will only take effect if the “Use Default Font” option is turned off.</description>
     </key>
-    <key name="scheme" type="s">
+    <key name="style-scheme-for-light-theme-variant" type="s">
       <default>'tango'</default>
-      <summary>Style Scheme</summary>
-      <description>The ID of a GtkSourceView Style Scheme used to color the text.</description>
+      <summary>Style Scheme for Light Theme Variant</summary>
+      <description>The ID of a libgedit-gtksourceview style scheme used to color the main text area when the application has a light theme applied.</description>
+    </key>
+    <key name="style-scheme-for-dark-theme-variant" type="s">
+      <default>'solarized-dark'</default>
+      <summary>Style Scheme for Dark Theme Variant</summary>
+      <description>The ID of a libgedit-gtksourceview style scheme used to color the main text area when the application has a dark theme applied.</description>
     </key>
     <key name="create-backup-copy" type="b">
       <default>false</default>
@@ -58,6 +64,7 @@
       <description>Whether gedit should automatically save modified files after a time interval. You can set the time interval with the “Autosave Interval” option.</description>
     </key>
     <key name="auto-save-interval" type="u">
+      <range min="1" max="100"/>
       <default>10</default>
       <summary>Autosave Interval</summary>
       <description>Number of minutes after which gedit will automatically save modified files. This will only take effect if the “Autosave” option is turned on.</description>
@@ -87,6 +94,7 @@
       <description>Specifies the last split mode used with line wrapping mode, so that when wrapping mode is off we still remember the split mode choice. Use “word” for wrapping at word boundaries, and “char” for wrapping at individual character boundaries.</description>
     </key>
     <key name="tabs-size" type="u">
+      <range min="1" max="24"/>
       <default>8</default>
       <summary>Tab Size</summary>
       <description>Specifies the number of spaces that should be displayed instead of Tab characters.</description>
@@ -125,16 +133,6 @@
       <default>80</default>
       <summary>Right Margin Position</summary>
       <description>Specifies the position of the right margin.</description>
-    </key>
-    <key name="display-overview-map" type="b">
-      <default>false</default>
-      <summary>Display Overview Map</summary>
-      <description>Whether gedit should display the overview map for the document.</description>
-    </key>
-    <key name="background-pattern" enum="org.gnome.gedit.BackgroundPatternType">
-      <default>'none'</default>
-      <summary>Document background pattern type</summary>
-      <description>Whether the document will get a background pattern painted.</description>
     </key>
     <key name="smart-home-end" enum="org.gnome.gedit.SmartHomeEnd">
       <aliases>
@@ -186,6 +184,10 @@
     </key>
     <key name="bottom-panel-visible" type="b">
       <default>false</default>
+    </key>
+    <key name="theme-variant" enum="org.gnome.gedit.ThemeVariant">
+      <default>'system'</default>
+      <summary>Which theme variant to use</summary>
     </key>
   </schema>
   <schema id="org.gnome.gedit.preferences.print" path="/org/gnome/gedit/preferences/print/">
@@ -268,11 +270,20 @@
     <child name="history-entry" schema="org.gnome.gedit.state.history-entry"/>
   </schema>
   <schema id="org.gnome.gedit.state.window" path="/org/gnome/gedit/state/window/">
-    <key name="state" type="i">
-      <default>0</default>
+    <key name="maximized" type="b">
+      <default>false</default>
+      <summary>Maximized</summary>
+      <description>Whether the main window should start maximized.</description>
     </key>
-    <key name="size" type="(ii)">
-      <default>(900, 700)</default>
+    <key name="width" type="i">
+      <default>900</default>
+      <summary>Width</summary>
+      <description>The width of the main window.</description>
+    </key>
+    <key name="height" type="i">
+      <default>700</default>
+      <summary>Height</summary>
+      <description>The height of the main window.</description>
     </key>
     <key name="side-panel-size" type="i">
       <default>200</default>

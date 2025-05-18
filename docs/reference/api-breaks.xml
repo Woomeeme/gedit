@@ -15,57 +15,168 @@
     API stability guarantees.
   </para>
 
-  <para>
-    When it is possible, instead of directly removing an API, that API is first
-    marked as deprecated, and then removed for the next API break. See the
-    <link linkend="api-index-deprecated">index of deprecated symbols</link>.
-  </para>
-
   <refsect1>
-    <title>40 -> 41</title>
+    <title>47 -> 48</title>
     <itemizedlist>
       <listitem>
         <para>
-          The <code>GeditProgressInfoBar</code> class has been restored
+          <link linkend="gedit-window-get-bottom-panel">gedit_window_get_bottom_panel()</link>
+          now returns a <link linkend="TeplPanel">TeplPanel</link>.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </refsect1>
+
+  <refsect1>
+    <title>46 -> 47</title>
+    <itemizedlist>
+      <listitem>
+        <para>
+          The <link linkend="GeditWindow-active-tab-changed">GeditWindow::active-tab-changed</link>
+          signal has a different API: the tab parameter has been removed and the
+          signal is also called when the active tab becomes NULL.
         </para>
       </listitem>
       <listitem>
         <para>
-          <link linkend="GeditDocument">GeditDocument</link> is no longer a subclass
-          of <link linkend="TeplBuffer">TeplBuffer</link>.
+          The <code>GeditWindow::active-tab-state-changed</code> signal has been
+          removed. It was unused and was anyway there for convenience (it was
+          not an essential API).
         </para>
       </listitem>
       <listitem>
         <para>
-          The <code>GeditDocument::cursor-moved</code> signal has been restored.
+          The <code>GeditWindow::tabs-reordered</code> signal has been removed.
+          It was unused. Also, functions like
+          <link linkend="gedit-window-get-documents">gedit_window_get_documents()</link>
+          don't specify the order in which the objects are listed.
         </para>
       </listitem>
       <listitem>
         <para>
-          The <code>GeditDocument:shortname</code> property has been restored.
+          The <code>GeditTab::drop-uris</code> signal has been removed. You can
+          use the <link linkend="GeditView-drop-uris">GeditView::drop-uris</link>
+          signal instead (it is the same).
         </para>
       </listitem>
       <listitem>
         <para>
-          The <code>gedit_document_is_untouched()</code> function has been
-          restored.
+          The <code>gedit_utils_location_get_dirname_for_display()</code>
+          function has been removed.
         </para>
       </listitem>
       <listitem>
         <para>
-          The <code>gedit_view_set_font()</code> function has been restored.
+          The <code>gedit_app_set_window_title()</code> function is now private.
+          The window title is handled by the gedit core and should not be
+          altered by plugins.
         </para>
       </listitem>
       <listitem>
         <para>
-          <code>DEBUG_METADATA</code> has been restored.
+          The <code>gedit_app_process_window_event()</code> function is now
+          private. The function should be only useful to the gedit core, not
+          plugins.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </refsect1>
+
+  <refsect1>
+    <title>45 -> 46</title>
+    <itemizedlist>
+      <listitem>
+        <para>
+          The <link linkend="gedit-window-get-side-panel">gedit_window_get_side_panel()</link>
+          function now returns a <link linkend="TeplPanel">TeplPanel</link>.
         </para>
       </listitem>
       <listitem>
         <para>
-          The <code>GBOOLEAN_TO_POINTER()</code> and
-          <code>GPOINTER_TO_BOOLEAN()</code> macros have been restored to
-          <code>gedit-utils.h</code>.
+          The <code>gedit_statusbar_new()</code> and
+          <code>gedit_statusbar_set_window_state()</code> functions have been
+          removed.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <code>gedit_utils_set_atk_name_description()</code> function has
+          been removed.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </refsect1>
+
+  <refsect1>
+    <title>44 -> 45</title>
+    <itemizedlist>
+      <listitem>
+        <para>
+          Vala plugins need to rely on the GObject Introspection file instead of
+          the vapi. The latter is no longer generated.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <code>gedit_window_create_tab_from_location()</code> and
+          <code>gedit_window_create_tab_from_stream()</code> functions have been
+          removed, use
+          <link linkend="gedit-window-create-tab">gedit_window_create_tab()</link>
+          followed by
+          <link linkend="gedit-tab-load-file">gedit_tab_load_file()</link> or
+          <link linkend="gedit-tab-load-stream">gedit_tab_load_stream()</link>
+          instead.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </refsect1>
+
+  <refsect1>
+    <title>43 -> 44</title>
+    <itemizedlist>
+      <listitem>
+        <para>
+          When an URI is added to the
+          <link linkend="GtkRecentManager">GtkRecentManager</link>,
+          the <code>groups</code> field of
+          <link linkend="GtkRecentData">GtkRecentData</link>
+          is no longer set. You can rely on the application name instead.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <code>gedit_document_get_language()</code> function has been
+          removed, use
+          <link linkend="gtk-source-buffer-get-language">gtk_source_buffer_get_language()</link>
+          instead.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <code>gedit_document_get_short_name_for_display()</code> function has been
+          removed, use
+          <link linkend="tepl-file-get-short-name">tepl_file_get_short_name()</link>
+          instead.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <code>gedit_document_is_untitled()</code> function has been
+          removed, use
+          <link linkend="tepl-file-get-location">tepl_file_get_location()</link>
+          instead. If the location is <code>NULL</code>, it means that the
+          document is untitled. The <link linkend="TeplFile">TeplFile</link>
+          object should be retrieved with
+          <link linkend="tepl-buffer-get-file">tepl_buffer_get_file()</link>
+          (<link linkend="GeditDocument">GeditDocument</link> inherits from
+          <link linkend="TeplBuffer">TeplBuffer</link>).
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <code>gedit_statusbar_set_overwrite()</code>
+          and <code>gedit_statusbar_clear_overwrite()</code>
+          functions have been removed.
         </para>
       </listitem>
     </itemizedlist>

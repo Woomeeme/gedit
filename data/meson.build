@@ -1,24 +1,30 @@
 subdir('icons')
 
+# Man page
+
 install_man('gedit.1')
 
-appdata = 'org.gnome.gedit.appdata.xml'
-appdata_file = i18n.merge_file(
-  input: appdata + '.in',
-  output: appdata,
+# AppStream metainfo
+
+metainfo = 'org.gnome.gedit.metainfo.xml'
+metainfo_file = i18n.merge_file(
+  input: metainfo + '.in',
+  output: metainfo,
   po_dir: '../po/',
   install: true,
   install_dir: get_option('datadir') / 'metainfo'
 )
 
-appstream_util = find_program('appstream-util', required: get_option('require_all_tests'))
-if appstream_util.found()
+appstreamcli = find_program('appstreamcli', required: get_option('require_all_tests'))
+if appstreamcli.found()
   test(
-    'validate-appdata',
-    appstream_util,
-    args: ['validate-relax', '--nonet', appdata_file]
+    'validate-metainfo',
+    appstreamcli,
+    args: ['validate', '--no-net', metainfo_file]
   )
 endif
+
+# Desktop file
 
 desktop_file = 'org.gnome.gedit.desktop'
 desktop_output_file = i18n.merge_file(
@@ -39,31 +45,22 @@ if desktop_file_validate.found()
   )
 endif
 
-active_plugins = [
-  'docinfo',
-  'filebrowser',
-  'modelines',
-  'openlinks',
-  'sort',
-  'spell',
-]
+# GSettings schema
 
-quoted_plugins = []
-foreach plugin_name : active_plugins
-  quoted_plugins += '\'@0@\''.format(plugin_name)
-endforeach
-
-gschema_in = configuration_data()
-gschema_in.set('ACTIVE_PLUGINS', ', '.join(quoted_plugins))
+gschema_config_data = configuration_data()
+gschema_config_data.set(
+  'ACTIVE_PLUGINS',
+  '\'filebrowser\', \'sort\', \'spell\', \'textsize\''
+)
 
 gschema_file = configure_file(
   input: 'org.gnome.gedit.gschema.xml.in',
   output: 'org.gnome.gedit.gschema.xml',
-  configuration: gschema_in,
+  configuration: gschema_config_data,
   install_dir: get_option('datadir') / 'glib-2.0/schemas'
 )
 
-gschema_dtd = gio_dep.get_pkgconfig_variable('schemasdir') / 'gschema.dtd'
+gschema_dtd = gio_dep.get_variable(pkgconfig: 'schemasdir') / 'gschema.dtd'
 
 xmllint = find_program('xmllint', required: get_option('require_all_tests'))
 if xmllint.found()
@@ -85,12 +82,14 @@ if host_machine.system() == 'windows'
   )
 endif
 
-service_in = configuration_data()
-service_in.set('bindir', get_option('prefix') / get_option('bindir'))
+# D-Bus service
+
+service_config_data = configuration_data()
+service_config_data.set('bindir', get_option('prefix') / get_option('bindir'))
 
 configure_file(
   input: 'org.gnome.gedit.service.in',
   output: 'org.gnome.gedit.service',
-  configuration: service_in,
+  configuration: service_config_data,
   install_dir: get_option('datadir') / 'dbus-1/services'
 )

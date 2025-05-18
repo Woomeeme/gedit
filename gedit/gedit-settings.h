@@ -41,16 +41,21 @@ G_GNUC_INTERNAL
 GSettings *	_gedit_settings_peek_editor_settings			(GeditSettings *self);
 
 G_GNUC_INTERNAL
+GSettings *	_gedit_settings_peek_ui_settings			(GeditSettings *self);
+
+G_GNUC_INTERNAL
 GSettings *	_gedit_settings_peek_file_chooser_state_settings	(GeditSettings *self);
 
-gchar *		gedit_settings_get_system_font				(GeditSettings *self);
+G_GNUC_INTERNAL
+GSettings *	_gedit_settings_peek_window_state_settings		(GeditSettings *self);
 
 GSList *	gedit_settings_get_candidate_encodings			(gboolean *default_candidates);
 
 /* key constants */
+#define GEDIT_SETTINGS_STYLE_SCHEME_FOR_LIGHT_THEME_VARIANT	"style-scheme-for-light-theme-variant"
+#define GEDIT_SETTINGS_STYLE_SCHEME_FOR_DARK_THEME_VARIANT 	"style-scheme-for-dark-theme-variant"
 #define GEDIT_SETTINGS_USE_DEFAULT_FONT			"use-default-font"
 #define GEDIT_SETTINGS_EDITOR_FONT			"editor-font"
-#define GEDIT_SETTINGS_SCHEME				"scheme"
 #define GEDIT_SETTINGS_CREATE_BACKUP_COPY		"create-backup-copy"
 #define GEDIT_SETTINGS_AUTO_SAVE			"auto-save"
 #define GEDIT_SETTINGS_AUTO_SAVE_INTERVAL		"auto-save-interval"
@@ -69,11 +74,10 @@ GSList *	gedit_settings_get_candidate_encodings			(gboolean *default_candidates)
 #define GEDIT_SETTINGS_RESTORE_CURSOR_POSITION		"restore-cursor-position"
 #define GEDIT_SETTINGS_SYNTAX_HIGHLIGHTING		"syntax-highlighting"
 #define GEDIT_SETTINGS_SEARCH_HIGHLIGHTING		"search-highlighting"
-#define GEDIT_SETTINGS_DISPLAY_OVERVIEW_MAP		"display-overview-map"
-#define GEDIT_SETTINGS_BACKGROUND_PATTERN		"background-pattern"
 #define GEDIT_SETTINGS_STATUSBAR_VISIBLE		"statusbar-visible"
 #define GEDIT_SETTINGS_SIDE_PANEL_VISIBLE		"side-panel-visible"
 #define GEDIT_SETTINGS_BOTTOM_PANEL_VISIBLE		"bottom-panel-visible"
+#define GEDIT_SETTINGS_THEME_VARIANT			"theme-variant"
 #define GEDIT_SETTINGS_PRINT_SYNTAX_HIGHLIGHTING	"print-syntax-highlighting"
 #define GEDIT_SETTINGS_PRINT_HEADER			"print-header"
 #define GEDIT_SETTINGS_PRINT_WRAP_MODE			"print-wrap-mode"
@@ -90,8 +94,6 @@ GSList *	gedit_settings_get_candidate_encodings			(gboolean *default_candidates)
 #define GEDIT_SETTINGS_ENSURE_TRAILING_NEWLINE		"ensure-trailing-newline"
 
 /* window state keys */
-#define GEDIT_SETTINGS_WINDOW_STATE			"state"
-#define GEDIT_SETTINGS_WINDOW_SIZE			"size"
 #define GEDIT_SETTINGS_SHOW_TABS_MODE			"show-tabs-mode"
 #define GEDIT_SETTINGS_SIDE_PANEL_SIZE			"side-panel-size"
 #define GEDIT_SETTINGS_SIDE_PANEL_ACTIVE_PAGE		"side-panel-active-page"

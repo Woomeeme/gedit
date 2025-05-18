@@ -21,15 +21,8 @@
  */
 
 #include "gedit-print-job.h"
-
 #include <glib/gi18n.h>
-#include <gtksourceview/gtksource.h>
-
-#include "gedit-debug.h"
-#include "gedit-document-private.h"
 #include "gedit-print-preview.h"
-#include "gedit-utils.h"
-#include "gedit-dirs.h"
 #include "gedit-settings.h"
 
 struct _GeditPrintJob
@@ -38,7 +31,7 @@ struct _GeditPrintJob
 
 	GSettings *gsettings;
 
-	GeditView *view;
+	TeplView *view;
 
 	GtkPrintOperation *operation;
 	GtkSourcePrintCompositor *compositor;
@@ -181,10 +174,12 @@ gedit_print_job_class_init (GeditPrintJobClass *klass)
 
 	properties[PROP_VIEW] =
 		g_param_spec_object ("view",
-		                     "Gedit View",
-		                     "Gedit View to print",
-		                     GEDIT_TYPE_VIEW,
-		                     G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_CONSTRUCT_ONLY);
+		                     "view",
+		                     "",
+		                     TEPL_TYPE_VIEW,
+		                     G_PARAM_READWRITE |
+				     G_PARAM_STATIC_STRINGS |
+				     G_PARAM_CONSTRUCT_ONLY);
 
 	g_object_class_install_properties (object_class, LAST_PROP, properties);
 
@@ -249,7 +244,7 @@ create_custom_widget_cb (GtkPrintOperation *operation,
 	guint line_numbers;
 	GtkWrapMode wrap_mode;
 
-	gchar *root_objects[] = {
+	const gchar *root_objects[] = {
 		"adjustment1",
 		"contents",
 		NULL
@@ -257,7 +252,7 @@ create_custom_widget_cb (GtkPrintOperation *operation,
 
 	builder = gtk_builder_new ();
 	gtk_builder_add_objects_from_resource (builder, "/org/gnome/gedit/ui/gedit-print-preferences.ui",
-	                                       root_objects, NULL);
+	                                       (gchar **)root_objects, NULL);
 	contents = GTK_WIDGET (gtk_builder_get_object (builder, "contents"));
 	g_object_ref (contents);
 	job->syntax_checkbutton = GTK_TOGGLE_BUTTON (gtk_builder_get_object (builder, "syntax_checkbutton"));
@@ -534,8 +529,8 @@ create_compositor (GeditPrintJob *job)
 		gchar *name_to_display;
 		gchar *left;
 
-		doc_name = _gedit_document_get_uri_for_display (GEDIT_DOCUMENT (buf));
-		name_to_display = gedit_utils_str_middle_truncate (doc_name, 60);
+		doc_name = tepl_file_get_full_name (tepl_buffer_get_file (TEPL_BUFFER (buf)));
+		name_to_display = tepl_utils_str_middle_truncate (doc_name, 60);
 
 		left = g_strdup_printf (_("File: %s"), name_to_display);
 
@@ -679,9 +674,9 @@ done_cb (GtkPrintOperation       *operation,
 }
 
 GeditPrintJob *
-gedit_print_job_new (GeditView *view)
+gedit_print_job_new (TeplView *view)
 {
-	g_return_val_if_fail (GEDIT_IS_VIEW (view), NULL);
+	g_return_val_if_fail (TEPL_IS_VIEW (view), NULL);
 
 	return g_object_new (GEDIT_TYPE_PRINT_JOB,
 			     "view", view,
@@ -699,7 +694,7 @@ gedit_print_job_print (GeditPrintJob            *job,
 		       GtkWindow                *parent,
 		       GError                  **error)
 {
-	GeditDocument *doc;
+	TeplBuffer *buffer;
 	gchar *job_name;
 
 	g_return_val_if_fail (job->operation == NULL, GTK_PRINT_OPERATION_RESULT_ERROR);
@@ -721,8 +716,8 @@ gedit_print_job_print (GeditPrintJob            *job,
 							    page_setup);
 	}
 
-	doc = GEDIT_DOCUMENT (gtk_text_view_get_buffer (GTK_TEXT_VIEW (job->view)));
-	job_name = gedit_document_get_short_name_for_display (doc);
+	buffer = TEPL_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (job->view)));
+	job_name = tepl_file_get_short_name (tepl_buffer_get_file (buffer));
 	gtk_print_operation_set_job_name (job->operation, job_name);
 	g_free (job_name);
 

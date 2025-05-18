@@ -8,23 +8,28 @@
 
   <part id="api-reference">
     <title>API Reference</title>
-    <xi:include href="xml/gedit-app.xml"/>
-    <xi:include href="xml/gedit-app-activatable.xml"/>
-    <xi:include href="xml/gedit-commands.xml"/>
-    <xi:include href="xml/gedit-document.xml"/>
-    <xi:include href="xml/gedit-encodings-combo-box.xml"/>
-    <xi:include href="xml/gedit-menu-extension.xml"/>
-    <xi:include href="xml/gedit-message-bus.xml"/>
-    <xi:include href="xml/gedit-message.xml"/>
-    <xi:include href="xml/gedit-progress-info-bar.xml"/>
-    <xi:include href="xml/gedit-statusbar.xml"/>
-    <xi:include href="xml/gedit-tab.xml"/>
-    <xi:include href="xml/gedit-view.xml"/>
-    <xi:include href="xml/gedit-view-activatable.xml"/>
-    <xi:include href="xml/gedit-window.xml"/>
-    <xi:include href="xml/gedit-window-activatable.xml"/>
-    <xi:include href="xml/gedit-debug.xml"/>
-    <xi:include href="xml/gedit-utils.xml"/>
+    <chapter>
+      <title>Main Classes</title>
+      <xi:include href="xml/gedit-app.xml"/>
+      <xi:include href="xml/gedit-app-activatable.xml"/>
+      <xi:include href="xml/gedit-window.xml"/>
+      <xi:include href="xml/gedit-window-activatable.xml"/>
+      <xi:include href="xml/gedit-tab.xml"/>
+      <xi:include href="xml/gedit-view.xml"/>
+      <xi:include href="xml/gedit-view-activatable.xml"/>
+      <xi:include href="xml/gedit-document.xml"/>
+    </chapter>
+    <chapter>
+      <title>Other</title>
+      <xi:include href="xml/gedit-commands.xml"/>
+      <xi:include href="xml/gedit-encodings-combo-box.xml"/>
+      <xi:include href="xml/gedit-menu-extension.xml"/>
+      <xi:include href="xml/gedit-message-bus.xml"/>
+      <xi:include href="xml/gedit-message.xml"/>
+      <xi:include href="xml/gedit-statusbar.xml"/>
+      <xi:include href="xml/gedit-debug.xml"/>
+      <xi:include href="xml/gedit-utils.xml"/>
+    </chapter>
   </part>
 
   <xi:include href="api-breaks.xml"/>
@@ -54,6 +59,22 @@
     <index role="3.14">
       <title>Index of new symbols in 3.14</title>
       <xi:include href="xml/api-index-3.14.xml"><xi:fallback /></xi:include>
+    </index>
+    <index role="45">
+      <title>Index of new symbols in 45</title>
+      <xi:include href="xml/api-index-45.xml"><xi:fallback /></xi:include>
+    </index>
+    <index role="46">
+      <title>Index of new symbols in 46</title>
+      <xi:include href="xml/api-index-46.xml"><xi:fallback /></xi:include>
+    </index>
+    <index role="47">
+      <title>Index of new symbols in 47</title>
+      <xi:include href="xml/api-index-47.xml"><xi:fallback /></xi:include>
+    </index>
+    <index role="48">
+      <title>Index of new symbols in 48</title>
+      <xi:include href="xml/api-index-48.xml"><xi:fallback /></xi:include>
     </index>
   </part>
 </book>

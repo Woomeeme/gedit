@@ -1,0 +1,138 @@
+{
+  "app-id": "org.gnome.gedit",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "master",
+  "sdk": "org.gnome.Sdk",
+  "command": "gedit",
+  "tags": [
+    "nightly"
+  ],
+  "desktop-file-name-prefix": "(Nightly) ",
+  "finish-args": [
+    "--share=ipc",
+    "--socket=x11",
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--metadata=X-DConf=migrate-path=/org/gnome/gedit/",
+    "--filesystem=host",
+    "--filesystem=xdg-run/gvfsd",
+    "--talk-name=org.gtk.vfs.*"
+  ],
+  "build-options": {
+    "cflags": "-O2 -g",
+    "cxxflags": "-O2 -g",
+    "env": {
+      "V": "1"
+    }
+  },
+  "cleanup": [
+    "/include",
+    "/lib/pkgconfig",
+    "/share/pkgconfig",
+    "/share/aclocal",
+    "/man",
+    "/share/man",
+    "/share/gtk-doc",
+    "/share/vala",
+    "/share/gir-1.0",
+    "*.la",
+    "*.a"
+  ],
+  "modules": [
+    {
+      "name": "libpeas",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dlua51=false",
+        "-Dglade_catalog=false",
+        "-Ddemos=false"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://download.gnome.org/sources/libpeas/1.36/libpeas-1.36.0.tar.xz",
+          "sha256": "297cb9c2cccd8e8617623d1a3e8415b4530b8e5a893e3527bbfd1edd13237b4c"
+        }
+      ]
+    },
+    {
+      "name": "gspell",
+      "cleanup": [
+        "/bin"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://download.gnome.org/sources/gspell/1.12/gspell-1.12.2.tar.xz",
+          "sha256": "b4e993bd827e4ceb6a770b1b5e8950fce3be9c8b2b0cbeb22fdf992808dd2139"
+        }
+      ]
+    },
+    {
+      "name": "libgedit-amtk",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dgtk_doc=false"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/gedit-technology/libgedit-amtk.git",
+          "branch": "main"
+        }
+      ]
+    },
+    {
+      "name": "libgedit-gtksourceview",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dgtk_doc=false",
+        "-Dtests_relying_on_external_programs=false"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/gedit-technology/libgedit-gtksourceview.git",
+          "branch": "main"
+        }
+      ]
+    },
+    {
+      "name": "tepl",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dgtk_doc=false"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://gitlab.gnome.org/swilmet/tepl.git",
+          "branch": "main"
+        }
+      ]
+    },
+    {
+      "name": "gedit",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dgtk_doc=false"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://gitlab.gnome.org/GNOME/gedit.git"
+        }
+      ]
+    },
+    {
+      "name": "gedit-plugins",
+      "buildsystem": "meson",
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://gitlab.gnome.org/GNOME/gedit-plugins.git"
+        }
+      ]
+    }
+  ]
+}

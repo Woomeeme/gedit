@@ -18,54 +18,83 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
-
 #include "gedit-statusbar.h"
-
-#include <string.h>
-#include <glib/gi18n.h>
-#include <gtk/gtk.h>
-
-#include "gedit-app.h"
-#include "gedit-status-menu-button.h"
+#include <tepl/tepl.h>
+#include "gedit-settings.h"
 
 struct _GeditStatusbar
 {
-	GtkStatusbar  parent_instance;
+	GtkStatusbar parent_instance;
 
-	GtkWidget     *error_frame;
-	GtkWidget     *error_image;
-	GtkWidget     *state_frame;
-	GtkWidget     *load_image;
-	GtkWidget     *save_image;
-	GtkWidget     *print_image;
-	GtkWidget     *overwrite_mode_label;
+	/* Weak ref */
+	GeditWindow *window;
 
 	/* tmp flash timeout data */
-	guint          flash_timeout;
-	guint          flash_context_id;
-	guint          flash_message_id;
+	guint flash_timeout;
+	guint flash_context_id;
+	guint flash_message_id;
+
+	guint generic_message_context_id;
 };
 
 G_DEFINE_TYPE (GeditStatusbar, gedit_statusbar, GTK_TYPE_STATUSBAR)
 
-static gchar *
-get_overwrite_mode_string (gboolean overwrite)
+static void
+update_visibility (GeditStatusbar *statusbar)
 {
-	/* Use spaces to leave padding proportional to the font size */
-	return g_strdup_printf ("  %s  ", overwrite ? _("OVR") : _("INS"));
+	GeditSettings *settings;
+	GSettings *ui_settings;
+	gboolean visible;
+
+	if (statusbar->window == NULL)
+	{
+		return;
+	}
+
+	if (_gedit_window_is_fullscreen (statusbar->window))
+	{
+		gtk_widget_hide (GTK_WIDGET (statusbar));
+		return;
+	}
+
+	settings = _gedit_settings_get_singleton ();
+	ui_settings = _gedit_settings_peek_ui_settings (settings);
+
+	visible = g_settings_get_boolean (ui_settings, GEDIT_SETTINGS_STATUSBAR_VISIBLE);
+	gtk_widget_set_visible (GTK_WIDGET (statusbar), visible);
 }
 
-static gint
-get_overwrite_mode_length (void)
+static void
+statusbar_visible_setting_changed_cb (GSettings   *ui_settings,
+				      const gchar *key,
+				      gpointer     user_data)
 {
-	return 4 + MAX (g_utf8_strlen (_("OVR"), -1), g_utf8_strlen (_("INS"), -1));
+	GeditStatusbar *statusbar = GEDIT_STATUSBAR (user_data);
+	update_visibility (statusbar);
+}
+
+static gboolean
+window_state_event_cb (GtkWidget *window,
+		       GdkEvent  *event,
+		       gpointer   user_data)
+{
+	GeditStatusbar *statusbar = GEDIT_STATUSBAR (user_data);
+	GdkEventWindowState *event_window_state = (GdkEventWindowState *) event;
+
+	if (event_window_state->changed_mask & GDK_WINDOW_STATE_FULLSCREEN)
+	{
+		update_visibility (statusbar);
+	}
+
+	return GDK_EVENT_PROPAGATE;
 }
 
 static void
 gedit_statusbar_dispose (GObject *object)
 {
 	GeditStatusbar *statusbar = GEDIT_STATUSBAR (object);
+
+	g_clear_weak_pointer (&statusbar->window);
 
 	if (statusbar->flash_timeout > 0)
 	{
@@ -80,70 +109,57 @@ static void
 gedit_statusbar_class_init (GeditStatusbarClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
 	object_class->dispose = gedit_statusbar_dispose;
-
-	gtk_widget_class_set_template_from_resource (widget_class,
-		                                    "/org/gnome/gedit/ui/gedit-statusbar.ui");
-
-	gtk_widget_class_bind_template_child (widget_class, GeditStatusbar, error_frame);
-	gtk_widget_class_bind_template_child (widget_class, GeditStatusbar, error_image);
-	gtk_widget_class_bind_template_child (widget_class, GeditStatusbar, state_frame);
-	gtk_widget_class_bind_template_child (widget_class, GeditStatusbar, load_image);
-	gtk_widget_class_bind_template_child (widget_class, GeditStatusbar, save_image);
-	gtk_widget_class_bind_template_child (widget_class, GeditStatusbar, print_image);
-	gtk_widget_class_bind_template_child (widget_class, GeditStatusbar, overwrite_mode_label);
 }
 
 static void
 gedit_statusbar_init (GeditStatusbar *statusbar)
 {
-	gtk_widget_init_template (GTK_WIDGET (statusbar));
+	statusbar->generic_message_context_id =
+		gtk_statusbar_get_context_id (GTK_STATUSBAR (statusbar), "generic_message");
 
-	gtk_label_set_width_chars (GTK_LABEL (statusbar->overwrite_mode_label),
-	                           get_overwrite_mode_length ());
+	tepl_utils_setup_statusbar (GTK_STATUSBAR (statusbar));
 }
 
-/**
- * gedit_statusbar_new:
- *
- * Creates a new #GeditStatusbar.
- *
- * Return value: the new #GeditStatusbar object
- **/
-GtkWidget *
-gedit_statusbar_new (void)
+GeditStatusbar *
+_gedit_statusbar_new (void)
 {
-	return GTK_WIDGET (g_object_new (GEDIT_TYPE_STATUSBAR, NULL));
+	return g_object_new (GEDIT_TYPE_STATUSBAR, NULL);
 }
 
-/**
- * gedit_statusbar_set_overwrite:
- * @statusbar: a #GeditStatusbar
- * @overwrite: if the overwrite mode is set
- *
- * Sets the overwrite mode on the statusbar.
- **/
+/* TODO: remove this function, and take a GeditWindow parameter in new().
+ * This requires to create the statusbar in code, not in a *.ui file.
+ */
 void
-gedit_statusbar_set_overwrite (GeditStatusbar *statusbar,
-                               gboolean        overwrite)
+_gedit_statusbar_set_window (GeditStatusbar *statusbar,
+			     GeditWindow    *window)
 {
-	gchar *msg;
+	GeditSettings *settings;
+	GSettings *ui_settings;
 
 	g_return_if_fail (GEDIT_IS_STATUSBAR (statusbar));
+	g_return_if_fail (GEDIT_IS_WINDOW (window));
+	g_return_if_fail (statusbar->window == NULL);
 
-	msg = get_overwrite_mode_string (overwrite);
-	gtk_label_set_text (GTK_LABEL (statusbar->overwrite_mode_label), msg);
-	g_free (msg);
-}
+	g_set_weak_pointer (&statusbar->window, window);
 
-void
-gedit_statusbar_clear_overwrite (GeditStatusbar *statusbar)
-{
-	g_return_if_fail (GEDIT_IS_STATUSBAR (statusbar));
+	settings = _gedit_settings_get_singleton ();
+	ui_settings = _gedit_settings_peek_ui_settings (settings);
 
-	gtk_label_set_text (GTK_LABEL (statusbar->overwrite_mode_label), NULL);
+	g_signal_connect_object (ui_settings,
+				 "changed::" GEDIT_SETTINGS_STATUSBAR_VISIBLE,
+				 G_CALLBACK (statusbar_visible_setting_changed_cb),
+				 statusbar,
+				 G_CONNECT_DEFAULT);
+
+	g_signal_connect_object (window,
+				 "window-state-event",
+				 G_CALLBACK (window_state_event_cb),
+				 statusbar,
+				 G_CONNECT_AFTER);
+
+	update_visibility (statusbar);
 }
 
 static gboolean
@@ -153,9 +169,37 @@ remove_message_timeout (GeditStatusbar *statusbar)
 	                      statusbar->flash_context_id,
 	                      statusbar->flash_message_id);
 
-	/* remove the timeout */
+	/* Remove the timeout. */
 	statusbar->flash_timeout = 0;
-  	return FALSE;
+	return G_SOURCE_REMOVE;
+}
+
+static void
+flash_text (GeditStatusbar *statusbar,
+	    guint           context_id,
+	    const gchar    *text)
+{
+	const guint32 flash_length = 3000; /* Three seconds. */
+
+	/* Remove a currently ongoing flash message. */
+	if (statusbar->flash_timeout > 0)
+	{
+		g_source_remove (statusbar->flash_timeout);
+		statusbar->flash_timeout = 0;
+
+		gtk_statusbar_remove (GTK_STATUSBAR (statusbar),
+				      statusbar->flash_context_id,
+				      statusbar->flash_message_id);
+	}
+
+	statusbar->flash_context_id = context_id;
+	statusbar->flash_message_id = gtk_statusbar_push (GTK_STATUSBAR (statusbar),
+							  context_id,
+							  text);
+
+	statusbar->flash_timeout = g_timeout_add (flash_length,
+						  (GSourceFunc) remove_message_timeout,
+						  statusbar);
 }
 
 /* FIXME this is an issue for introspection */
@@ -174,85 +218,39 @@ gedit_statusbar_flash_message (GeditStatusbar *statusbar,
 			       const gchar    *format,
 			       ...)
 {
-	const guint32 flash_length = 3000; /* three seconds */
 	va_list args;
-	gchar *msg;
+	gchar *text;
 
 	g_return_if_fail (GEDIT_IS_STATUSBAR (statusbar));
 	g_return_if_fail (format != NULL);
 
 	va_start (args, format);
-	msg = g_strdup_vprintf (format, args);
+	text = g_strdup_vprintf (format, args);
 	va_end (args);
 
-	/* remove a currently ongoing flash message */
-	if (statusbar->flash_timeout > 0)
-	{
-		g_source_remove (statusbar->flash_timeout);
-		statusbar->flash_timeout = 0;
+	flash_text (statusbar, context_id, text);
 
-		gtk_statusbar_remove (GTK_STATUSBAR (statusbar),
-		                      statusbar->flash_context_id,
-		                      statusbar->flash_message_id);
-	}
-
-	statusbar->flash_context_id = context_id;
-	statusbar->flash_message_id = gtk_statusbar_push (GTK_STATUSBAR (statusbar),
-							  context_id,
-							  msg);
-
-	statusbar->flash_timeout = g_timeout_add (flash_length,
-						  (GSourceFunc) remove_message_timeout,
-						  statusbar);
-
-	g_free (msg);
+	g_free (text);
 }
 
 void
-gedit_statusbar_set_window_state (GeditStatusbar   *statusbar,
-				  GeditWindowState  state,
-				  gint              num_of_errors)
+_gedit_statusbar_flash_generic_message (GeditStatusbar *statusbar,
+					const gchar    *format,
+					...)
 {
+	va_list args;
+	gchar *text;
+
 	g_return_if_fail (GEDIT_IS_STATUSBAR (statusbar));
+	g_return_if_fail (format != NULL);
 
-	gtk_widget_hide (statusbar->state_frame);
-	gtk_widget_hide (statusbar->save_image);
-	gtk_widget_hide (statusbar->load_image);
-	gtk_widget_hide (statusbar->print_image);
+	va_start (args, format);
+	text = g_strdup_vprintf (format, args);
+	va_end (args);
 
-	if (state & GEDIT_WINDOW_STATE_SAVING)
-	{
-		gtk_widget_show (statusbar->state_frame);
-		gtk_widget_show (statusbar->save_image);
-	}
-	if (state & GEDIT_WINDOW_STATE_LOADING)
-	{
-		gtk_widget_show (statusbar->state_frame);
-		gtk_widget_show (statusbar->load_image);
-	}
-	if (state & GEDIT_WINDOW_STATE_PRINTING)
-	{
-		gtk_widget_show (statusbar->state_frame);
-		gtk_widget_show (statusbar->print_image);
-	}
-	if (state & GEDIT_WINDOW_STATE_ERROR)
-	{
-	 	gchar *tip;
+	flash_text (statusbar, statusbar->generic_message_context_id, text);
 
- 		tip = g_strdup_printf (ngettext("There is a tab with errors",
-		                                "There are %d tabs with errors",
-		                                num_of_errors),
-		                       num_of_errors);
-
-		gtk_widget_set_tooltip_text (statusbar->error_image, tip);
-		g_free (tip);
-
-		gtk_widget_show (statusbar->error_frame);
-	}
-	else
-	{
-		gtk_widget_hide (statusbar->error_frame);
-	}
+	g_free (text);
 }
 
 /* ex:set ts=8 noet: */

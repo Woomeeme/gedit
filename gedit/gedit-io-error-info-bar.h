@@ -1,5 +1,4 @@
 /*
- * gedit-io-error-info-bar.h
  * This file is part of gedit
  *
  * Copyright (C) 2005 - Paolo Maggi
@@ -25,38 +24,24 @@
 
 G_BEGIN_DECLS
 
-GtkWidget	*gedit_io_loading_error_info_bar_new			(GFile                   *location,
+GtkWidget *	gedit_io_loading_error_info_bar_new			(GFile                   *location,
 									 const GtkSourceEncoding *encoding,
 									 const GError            *error);
 
-GtkWidget	*gedit_unrecoverable_reverting_error_info_bar_new	(GFile               *location,
-									 const GError        *error);
+GtkWidget *	gedit_unrecoverable_reverting_error_info_bar_new	(GFile        *location,
+									 const GError *error);
 
-GtkWidget	*gedit_conversion_error_while_saving_info_bar_new	(GFile                   *location,
-									 const GtkSourceEncoding *encoding,
-									 const GError            *error);
+GtkWidget *	gedit_conversion_error_while_saving_info_bar_new	(GFile                   *location,
+									 const GtkSourceEncoding *encoding);
 
-const GtkSourceEncoding
-		*gedit_conversion_error_info_bar_get_encoding		(GtkWidget           *info_bar);
+const GtkSourceEncoding *
+		gedit_conversion_error_info_bar_get_encoding		(GtkWidget *info_bar);
 
-GtkWidget	*gedit_file_already_open_warning_info_bar_new		(GFile               *location);
-
-GtkWidget	*gedit_externally_modified_saving_error_info_bar_new	(GFile               *location,
-									 const GError        *error);
-
-GtkWidget	*gedit_no_backup_saving_error_info_bar_new		 (GFile               *location,
-									  const GError        *error);
-
-GtkWidget	*gedit_unrecoverable_saving_error_info_bar_new		(GFile               *location,
-									 const GError        *error);
-
-GtkWidget	*gedit_externally_modified_info_bar_new		 	(GFile               *location,
-									 gboolean             document_modified);
-
-GtkWidget	*gedit_invalid_character_info_bar_new			(GFile               *location);
+GtkWidget *	gedit_unrecoverable_saving_error_info_bar_new		(GFile        *location,
+									 const GError *error);
 
 G_END_DECLS
 
-#endif  /* GEDIT_IO_ERROR_INFO_BAR_H  */
+#endif /* GEDIT_IO_ERROR_INFO_BAR_H */
 
 /* ex:set ts=8 noet: */

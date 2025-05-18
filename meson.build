@@ -1,7 +1,8 @@
 project(
   'gedit', 'c',
-  version: '41.0',
-  meson_version: '>= 0.53'
+  version: '48.1',
+  meson_version: '>= 0.59',
+  default_options: ['warning_level=2']
 )
 
 if host_machine.system() == 'darwin'
@@ -12,21 +13,80 @@ gnome = import('gnome')
 i18n = import('i18n')
 pkg_config = import('pkgconfig')
 python = import('python')
+fs = import('fs')
 
-api_version = '41'
+api_version = '48.1'
+
+#####
+# CFLAGS
+# Some flags are missing when using only the builtin warning_level meson option,
+# even at the maximum level.
+# The following warning_cflags suppose that warning_level=2.
+
+# Tries to mimic the AX_COMPILER_FLAGS Autotools macro.
+warning_cflags = [
+  '-fno-strict-aliasing',
+  '-Wundef',
+  '-Wnested-externs',
+  '-Wwrite-strings',
+  '-Wpointer-arith',
+  '-Wmissing-declarations',
+  '-Wmissing-prototypes',
+  '-Wstrict-prototypes',
+  '-Wredundant-decls',
+  '-Wno-unused-parameter',
+  '-Wno-missing-field-initializers',
+  '-Wdeclaration-after-statement',
+  '-Wformat=2',
+  '-Wold-style-definition',
+  '-Wcast-align',
+  '-Wformat-nonliteral',
+  '-Wformat-security',
+
+  #'-Wsign-compare',
+  '-Wno-sign-compare',
+
+  '-Wstrict-aliasing',
+  '-Wshadow',
+  '-Winline',
+  '-Wpacked',
+  '-Wmissing-format-attribute',
+  '-Wmissing-noreturn',
+  '-Winit-self',
+  '-Wredundant-decls',
+  '-Wmissing-include-dirs',
+  '-Wunused-but-set-variable',
+  '-Warray-bounds',
+  '-Wimplicit-function-declaration',
+  '-Wreturn-type',
+  #'-Wswitch-enum',
+  #'-Wswitch-default',
+  '-Wduplicated-cond',
+  '-Wduplicated-branches',
+  '-Wlogical-op',
+  '-Wrestrict',
+  '-Wnull-dereference',
+  '-Wjump-misses-init',
+  '-Wdouble-promotion',
+]
+
+c_compiler = meson.get_compiler('c')
+supported_warning_cflags = c_compiler.get_supported_arguments(warning_cflags)
+# Use add_global_arguments() (not add_project_arguments()) so that it is applied
+# to libgd as well.
+add_global_arguments(supported_warning_cflags, language: 'c')
+##### end CFLAGS
 
 # Paths
 root_include_dir = include_directories('.')
-
 srcdir = meson.current_source_dir()
 
-pkglibdir = get_option('prefix') / get_option('libdir') / 'gedit'
-pkgdatadir = get_option('prefix') / get_option('datadir') / 'gedit'
-glibdir = get_option('prefix') / get_option('datadir') / 'glib-2.0'
-
 # Subprojects
-if not get_option('buildtype').contains('plain')
-  run_command('git', '-C', meson.source_root(), 'submodule', 'update', '--init', '--recursive')
+if fs.is_dir('.git')
+  run_command(
+    'git', '-C', meson.project_source_root(), 'submodule', 'update', '--init', '--recursive',
+    check: true,
+  )
 endif
 
 libgd_subproject = subproject(
@@ -40,27 +100,13 @@ libgd_subproject = subproject(
 libgd_dep = libgd_subproject.get_variable('libgd_dep')
 
 # Dependencies
-glib_req = '>= 2.64'
-gtk_req = '>= 3.22'
-gtksourceview_req =  '>= 4.0'
-libpeas_req = '>= 1.14.1'
-libxml_req = '>= 2.5.0'
-gspell_req = '>= 1.0'
-pygobject_req = '>= 3.0.0'
-
-gio_dep = dependency('gio-2.0', version: glib_req)
-libxml_dep = dependency('libxml-2.0', version: libxml_req)
-gspell_dep = dependency('gspell-1', version: gspell_req, required: get_option('spell'))
-
-if get_option('python')
-  python3 = python.find_installation('python3')
-endif
+gio_dep = dependency('gio-2.0', version: '>= 2.76')
 
 libgedit_public_deps = [
   gio_dep,
-  dependency('gtk+-3.0', version: gtk_req),
-  dependency('gtksourceview-4', version: gtksourceview_req),
-  dependency('libpeas-gtk-1.0', version: libpeas_req),
+  dependency('gtk+-3.0', version: '>= 3.22'),
+  dependency('libgedit-tepl-6', version: '>= 6.12'),
+  dependency('libpeas-gtk-1.0'),
 ]
 
 deps_basic_list = [
@@ -68,23 +114,22 @@ deps_basic_list = [
   dependency('gobject-introspection-1.0'),
 ]
 
+gspell_dep = dependency('gspell-1', version: '>= 1.0')
+python3 = python.find_installation('python3')
+
 # Configurations
 config_h = configuration_data()
-config_h.set_quoted('PACKAGE_STRING', 'gedit-@0@'.format(api_version))
 config_h.set_quoted('GETTEXT_PACKAGE', meson.project_name())
-config_h.set_quoted('LIBDIR', join_paths(get_option('prefix'), get_option('libdir')))
-config_h.set_quoted('DATADIR', join_paths(get_option('prefix'), get_option('datadir')))
+config_h.set_quoted('GEDIT_CONFIG_LOCALE_DIR', get_option('prefix') / get_option('localedir'))
+config_h.set_quoted('LIBDIR', get_option('prefix') / get_option('libdir'))
+config_h.set_quoted('DATADIR', get_option('prefix') / get_option('datadir'))
 config_h.set_quoted('VERSION', meson.project_version())
+config_h.set10('OS_MACOS', host_machine.system() == 'darwin')
 
-enable_gvfs_metadata = get_option('enable-gvfs-metadata')
-if enable_gvfs_metadata == 'yes' or (enable_gvfs_metadata == 'auto' and host_machine.system() == 'linux')
-  enable_gvfs_metadata = true
+if get_option('headerbar') == 'auto'
+  config_h.set10('GEDIT_HAS_HEADERBAR', host_machine.system() != 'darwin')
 else
-  enable_gvfs_metadata = false
-endif
-
-if enable_gvfs_metadata
-  config_h.set('ENABLE_GVFS_METADATA', 1)
+  config_h.set10('GEDIT_HAS_HEADERBAR', get_option('headerbar') == 'yes')
 endif
 
 configure_file(
@@ -108,7 +153,12 @@ endif
 meson.add_install_script(
   'build-aux/meson/post_install.py',
   get_option('prefix') / get_option('libdir'),
-  get_option('prefix') / get_option('datadir')
+)
+
+gnome.post_install(
+  glib_compile_schemas: true,
+  gtk_update_icon_cache: true,
+  update_desktop_database: true,
 )
 
 summary('API version', api_version)
@@ -116,4 +166,4 @@ summary('Prefix', get_option('prefix'))
 summary('API documentation', get_option('gtk_doc'))
 summary('User documentation', get_option('user_documentation'))
 summary('Require all tests', get_option('require_all_tests'))
-summary('Spell checker plugin', get_option('spell').enabled().to_string())
+summary('Headerbar', get_option('headerbar'))

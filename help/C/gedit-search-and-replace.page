@@ -1,0 +1,122 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="guide"
+      id="gedit-search-and-replace">
+
+  <info>
+    <link type="guide" xref="index#gedit-working-with-files" group="sixth" />
+    <desc>Find and replace portions of text in a file.</desc>
+  </info>
+
+  <title>Search and replace</title>
+
+  <links type="topic" groups="first" />
+
+  <section>
+    <title>The simple search</title>
+    <p>
+      To open the search entry field, click on:
+    </p>
+    <p>
+      <guiseq>
+        <gui style="menu">Menu Button</gui>
+        <gui style="menuitem">Find…</gui>
+      </guiseq>
+    </p>
+  </section>
+
+  <section>
+    <title>The search and replace</title>
+    <p>
+      To open the Find and Replace dialog, click on:
+    </p>
+    <p>
+      <guiseq>
+        <gui style="menu">Menu Button</gui>
+        <gui style="menuitem">Find and Replace…</gui>
+      </guiseq>
+    </p>
+  </section>
+
+  <section>
+    <title>Clear highlight</title>
+    <p>
+      Usually, the text that you've searched for will remain highlighted in the
+      document. To remove the highlight, click on:
+    </p>
+    <p>
+      <guiseq>
+        <gui style="menu">Menu Button</gui>
+        <gui style="menuitem">Clear Highlight</gui>
+      </guiseq>
+    </p>
+  </section>
+
+  <section>
+    <title>Tips</title>
+    <p>
+      If you first select a portion of text in the document, and then start a
+      simple search or open the Find and Replace dialog, the text you've
+      selected will appear in the search entry.
+    </p>
+  </section>
+
+  <section>
+    <title>Search options</title>
+    <p>
+      The Find and Replace dialog presents the search options as check boxes.
+    </p>
+    <p>
+      For the simple search, click on the
+      <gui style="button">Magnifying Glass</gui> icon in the search entry field.
+    </p>
+    <list>
+      <item><p>
+        Select <gui>Match Case</gui> to make the search case sensitive.
+      </p></item>
+      <item>
+        <p>
+          Select <gui>Match Entire Word Only</gui> to search for a specific word
+          without including fragments of other words.
+        </p>
+        <p>
+          For example, if you searched for the word “and” with this option
+          selected, the word “and” would be matched, but the words
+          “sand” and “comm<em>and</em>er” would not be matched.
+        </p>
+      </item>
+      <item><p>
+        Select <gui>Wrap Around</gui> to continue at the other end of the
+        document when going to the next or previous search result.
+      </p></item>
+    </list>
+  </section>
+
+  <section>
+    <title>Using escape sequences</title>
+    <p>
+      In a search or replace entry, you can use <em>escape sequences</em> with
+      the following meanings:
+    </p>
+    <terms>
+      <item>
+        <title>\n</title>
+        <p>Newline</p>
+      </item>
+      <item>
+        <title>\r</title>
+        <p>Carriage return</p>
+      </item>
+      <item>
+        <title>\t</title>
+        <p>Tab</p>
+      </item>
+      <item>
+        <title>\\</title>
+        <p>
+          Backslash. If you actually want a backslash and avoid one of the above
+          special meanings, the backslash needs to be escaped.
+        </p>
+      </item>
+    </terms>
+  </section>
+</page>

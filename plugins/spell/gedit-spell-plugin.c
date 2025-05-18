@@ -30,13 +30,8 @@
 
 #include "gedit-spell-app-activatable.h"
 
-#ifdef G_OS_WIN32
-#define GEDIT_METADATA_ATTRIBUTE_SPELL_LANGUAGE "spell-language"
-#define GEDIT_METADATA_ATTRIBUTE_SPELL_ENABLED  "spell-enabled"
-#else
-#define GEDIT_METADATA_ATTRIBUTE_SPELL_LANGUAGE "metadata::gedit-spell-language"
-#define GEDIT_METADATA_ATTRIBUTE_SPELL_ENABLED  "metadata::gedit-spell-enabled"
-#endif
+#define GEDIT_METADATA_ATTRIBUTE_SPELL_LANGUAGE "gedit-spell-language"
+#define GEDIT_METADATA_ATTRIBUTE_SPELL_ENABLED  "gedit-spell-enabled"
 
 #define SPELL_ENABLED_STR "1"
 #define SPELL_BASE_SETTINGS	"org.gnome.gedit.plugins.spell"
@@ -760,7 +755,8 @@ get_configure_widget (GeditSpellPlugin *plugin)
 {
 	SpellConfigureWidget *widget;
 	GtkBuilder *builder;
-	gchar *root_objects[] = {
+	gboolean status;
+	const gchar *root_objects[] = {
 		"spell_dialog_content",
 		NULL
 	};
@@ -772,14 +768,14 @@ get_configure_widget (GeditSpellPlugin *plugin)
 
 	builder = gtk_builder_new ();
 	gtk_builder_add_objects_from_resource (builder, "/org/gnome/gedit/plugins/spell/ui/gedit-spell-setup-dialog.ui",
-	                                       root_objects, NULL);
+	                                       (gchar **)root_objects, NULL);
 	widget->content = GTK_WIDGET (gtk_builder_get_object (builder, "spell_dialog_content"));
 	g_object_ref (widget->content);
 
 	widget->highlight_button = GTK_WIDGET (gtk_builder_get_object (builder, "highlight_button"));
 	g_object_unref (builder);
 
-	gboolean status = g_settings_get_boolean(widget->settings, SETTINGS_KEY_HIGHLIGHT_MISSPELLED);
+	status = g_settings_get_boolean (widget->settings, SETTINGS_KEY_HIGHLIGHT_MISSPELLED);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget->highlight_button), status);
 
 	g_signal_connect (widget->highlight_button,

@@ -29,6 +29,7 @@
 #include <gedit/gedit-window.h>
 #include <gedit/gedit-window-activatable.h>
 #include <gedit/gedit-utils.h>
+#include <tepl/tepl.h>
 
 #include "gedit-file-browser-enum-types.h"
 #include "gedit-file-browser-plugin.h"
@@ -67,6 +68,8 @@ struct _GeditFileBrowserPluginPrivate
 	gulong                  end_loading_handle;
 
 	guint			click_policy_handle;
+
+	TeplPanelItem          *side_panel_item;
 };
 
 enum
@@ -121,23 +124,22 @@ G_DEFINE_DYNAMIC_TYPE_EXTENDED (GeditFileBrowserPlugin,
 )
 
 static GSettings *
-settings_try_new (const gchar *schema_id)
+create_nautilus_gsettings (void)
 {
-	GSettings *settings = NULL;
-	GSettingsSchemaSource *source;
-	GSettingsSchema *schema;
+	GSettings *nautilus_settings = NULL;
 
-	source = g_settings_schema_source_get_default ();
-
-	schema = g_settings_schema_source_lookup (source, schema_id, TRUE);
-
-	if (schema != NULL)
+	if (tepl_utils_can_use_gsettings_schema (NAUTILUS_BASE_SETTINGS))
 	{
-		settings = g_settings_new_full (schema, NULL, NULL);
-		g_settings_schema_unref (schema);
+		nautilus_settings = g_settings_new (NAUTILUS_BASE_SETTINGS);
+
+		if (tepl_utils_can_use_gsettings_key (nautilus_settings, NAUTILUS_CLICK_POLICY_KEY))
+		{
+			return nautilus_settings;
+		}
 	}
 
-	return settings;
+	g_clear_object (&nautilus_settings);
+	return g_settings_new (NAUTILUS_FALLBACK_SETTINGS);
 }
 
 static void
@@ -147,12 +149,7 @@ gedit_file_browser_plugin_init (GeditFileBrowserPlugin *plugin)
 
 	plugin->priv->settings = g_settings_new (FILEBROWSER_BASE_SETTINGS);
 	plugin->priv->terminal_settings = g_settings_new (TERMINAL_BASE_SETTINGS);
-	plugin->priv->nautilus_settings = settings_try_new (NAUTILUS_BASE_SETTINGS);
-
-	if (plugin->priv->nautilus_settings == NULL)
-	{
-		plugin->priv->nautilus_settings = g_settings_new (NAUTILUS_FALLBACK_SETTINGS);
-	}
+	plugin->priv->nautilus_settings = create_nautilus_gsettings ();
 }
 
 static void
@@ -438,10 +435,19 @@ gedit_file_browser_plugin_update_state (GeditWindowActivatable *activatable)
 {
 	GeditFileBrowserPluginPrivate *priv = GEDIT_FILE_BROWSER_PLUGIN (activatable)->priv;
 	GeditDocument *doc;
+	GFile *location = NULL;
 
 	doc = gedit_window_get_active_document (priv->window);
-	gedit_file_browser_widget_set_active_root_enabled (priv->tree_widget,
-	                                                   doc != NULL && !gedit_document_is_untitled (doc));
+
+	if (doc != NULL)
+	{
+		TeplFile *file;
+
+		file = tepl_buffer_get_file (TEPL_BUFFER (doc));
+		location = tepl_file_get_location (file);
+	}
+
+	gedit_file_browser_widget_set_active_root_enabled (priv->tree_widget, location != NULL);
 }
 
 static void
@@ -449,7 +455,7 @@ gedit_file_browser_plugin_activate (GeditWindowActivatable *activatable)
 {
 	GeditFileBrowserPlugin *plugin = GEDIT_FILE_BROWSER_PLUGIN (activatable);
 	GeditFileBrowserPluginPrivate *priv;
-	GtkWidget *panel;
+	TeplPanel *side_panel;
 	GeditFileBrowserStore *store;
 
 	priv = plugin->priv;
@@ -489,14 +495,15 @@ gedit_file_browser_plugin_activate (GeditWindowActivatable *activatable)
 	                 FILEBROWSER_FILTER_PATTERN,
 	                 G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET);
 
-	panel = gedit_window_get_side_panel (priv->window);
+	g_clear_object (&priv->side_panel_item);
+	priv->side_panel_item = tepl_panel_item_new (GTK_WIDGET (priv->tree_widget),
+						     "GeditFileBrowserPanel",
+						     _("File Browser"),
+						     NULL,
+						     0);
 
-	gtk_stack_add_titled (GTK_STACK (panel),
-	                      GTK_WIDGET (priv->tree_widget),
-	                      "GeditFileBrowserPanel",
-	                      _("File Browser"));
-
-	gtk_widget_show (GTK_WIDGET (priv->tree_widget));
+	side_panel = gedit_window_get_side_panel (priv->window);
+	tepl_panel_add (side_panel, priv->side_panel_item);
 
 	/* Install nautilus preferences */
 	install_nautilus_prefs (plugin);
@@ -547,8 +554,7 @@ gedit_file_browser_plugin_deactivate (GeditWindowActivatable *activatable)
 {
 	GeditFileBrowserPlugin *plugin = GEDIT_FILE_BROWSER_PLUGIN (activatable);
 	GeditFileBrowserPluginPrivate *priv = plugin->priv;
-	GtkWidget *panel;
-
+	TeplPanel *side_panel;
 
 	/* Unregister messages from the bus */
 	gedit_file_browser_messages_unregister (priv->window);
@@ -564,8 +570,9 @@ gedit_file_browser_plugin_deactivate (GeditWindowActivatable *activatable)
 					     priv->click_policy_handle);
 	}
 
-	panel = gedit_window_get_side_panel (priv->window);
-	gtk_container_remove (GTK_CONTAINER (panel), GTK_WIDGET (priv->tree_widget));
+	side_panel = gedit_window_get_side_panel (priv->window);
+	tepl_panel_remove (side_panel, priv->side_panel_item);
+	g_clear_object (&priv->side_panel_item);
 }
 
 static void

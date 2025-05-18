@@ -1,0 +1,4 @@
+# gobject-introspection files.  Has override files for Python 3.  It can't
+# declare a dependency on Python because it's possible to use these bindings
+# from Python 3, or many other languages.
+python-package-missing-depends-on-python

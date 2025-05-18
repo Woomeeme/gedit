@@ -1,3 +1,156 @@
+gedit (48.1-4) unstable; urgency=medium
+
+  * Team upload
+  * Replace build-dep on obsolete appstream-util with appstream
+
+ -- Matthias Klumpp <mak@debian.org>  Sat, 03 May 2025 14:44:38 +0200
+
+gedit (48.1-3) unstable; urgency=medium
+
+  * Rebuild against latest libgedit-tepl
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Fri, 04 Apr 2025 08:10:22 -0400
+
+gedit (48.1-2) unstable; urgency=medium
+
+  * Add Breaks/Replaces since gedit-plugin-text-size is installed here now
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 13 Feb 2025 12:35:56 -0500
+
+gedit (48.1-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #1072541)
+    - The Python console, External Tools, & Snippets are no longer provided
+      (Closes: #736229, #781096, #856950, #953676, #1085107, #1085602)
+  * Update homepage, debian/upstream/metadata & debian/watch
+  * Bump minimum glib and tepl
+  * Add lintian override for gedit shipping python override
+    without a Python dependency
+  * Bump Standards Version to 4.7.0
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 12 Feb 2025 17:44:27 -0500
+
+gedit (46.2-3) unstable; urgency=medium
+
+  * debian/postinst: Remove gedit as a gnome-text-editor alternative
+    in the alternatives system now that gnome-text-editor is an actual
+    program, provided in the gnome-text-editor package (Closes: #1057184)
+    (LP: #2062418)
+
+ -- Amin Bandali <bandali@ubuntu.com>  Thu, 18 Apr 2024 17:18:47 -0400
+
+gedit (46.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update Homepage
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 27 Mar 2024 18:51:14 -0400
+
+gedit (46.1-3) unstable; urgency=medium
+
+  * Stop using debian/control.in
+  * debian/control: Update minimum required meson version to 0.59,
+    following upstream
+
+ -- Amin Bandali <bandali@ubuntu.com>  Fri, 17 Nov 2023 08:01:20 -0500
+
+gedit (46.1-2) experimental; urgency=medium
+
+  * Team upload
+  * Don't hard-code myself in Uploaders in debian/control.in,
+    since I'm already in GNOME team and it might cause a duplicate:
+    WARNING: debian experimental main source: package gedit has listed
+    uploader Amin Bandali <bandali@ubuntu.com> twice
+    - debian/control.in
+
+ -- Amin Bandali <bandali@ubuntu.com>  Sat, 28 Oct 2023 10:17:18 -0400
+
+gedit (46.1-1) experimental; urgency=medium
+
+  * New upstream release
+  * debian/control.in: Add myself to uploaders
+  * debian/control.in: Adjust dependencies following upstream
+  * gedit-dev.install: Upstream no longer generates *.vapi Vala files
+  * debian/control.in: Drop valac from Build-Depends
+
+ -- Amin Bandali <bandali@ubuntu.com>  Thu, 19 Oct 2023 10:25:43 -0400
+
+gedit (44.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update standards version to 4.6.2, no changes needed
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Thu, 19 Jan 2023 13:25:50 -0500
+
+gedit (44.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * debian/control.in: Bump minimum tepl to 6.4
+  * Update debian/upstream/metadata
+  * Update standards version to 4.6.1, no changes needed.
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Fri, 06 Jan 2023 09:49:34 -0500
+
+gedit (43.2-2) unstable; urgency=medium
+
+  * debian/control.in: Add Depends to gedit-dev to match its pkgconfig file
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Fri, 18 Nov 2022 08:23:17 -0500
+
+gedit (43.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * Drop patch applied in new release
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Fri, 18 Nov 2022 08:06:13 -0500
+
+gedit (43.1-1) unstable; urgency=medium
+
+  * New upstream release
+    - This drops some changes from gedit 41 as part of reteplification
+  * debian/control.in: Build-Depend on amtk and tepl
+  * Drop the openlinks patch since the openlinks plugin has been removed
+  * Cherry-pick patch to fix the API version
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Thu, 17 Nov 2022 16:03:18 -0500
+
+gedit (42.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump debhelper-compat to 13
+  * debian/control.in: Set Rules-Requires-Root: no
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Thu, 28 Jul 2022 14:20:25 -0400
+
+gedit (42.1-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream release
+
+ -- Nathan Pratta Teodosio <nathan.teodosio@canonical.com>  Fri, 27 May 2022 11:07:04 -0300
+
+gedit (42.0-2) unstable; urgency=medium
+
+  * debian/control.in: Update package short descriptions
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Sat, 02 Apr 2022 08:05:02 -0400
+
+gedit (42.0-1) unstable; urgency=medium
+
+  * New upstream release
+    - Display name has been changed back from Text Editor to gedit
+  * Drop nonlinux build patch: applied in new release
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Fri, 01 Apr 2022 16:13:12 -0400
+
+gedit (41.0-3) unstable; urgency=medium
+
+  * debian/patches/gitlab_openlinks_fix.patch:
+    - don't try to convert an array of gunicode to a gchar, fix the build
+      fixed on s390x
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 02 Mar 2022 13:34:07 +0100
+
 gedit (41.0-2) unstable; urgency=medium
 
   * Restore fix_ftbfs_nonlinux.patch: accidentally left out of 41.0 release

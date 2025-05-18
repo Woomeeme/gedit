@@ -1,5 +1,4 @@
 /*
- * gedit-help-commands.c
  * This file is part of gedit
  *
  * Copyright (C) 1998, 1999 Alex Roberts, Evan Lawrence
@@ -21,101 +20,67 @@
  */
 
 #include "config.h"
-
-#include "gedit-commands.h"
 #include "gedit-commands-private.h"
-
 #include <glib/gi18n.h>
-#include <gtk/gtk.h>
-
-#include "gedit-debug.h"
 #include "gedit-app.h"
-#include "gedit-dirs.h"
-
-void
-_gedit_cmd_help_keyboard_shortcuts (GeditWindow *window)
-{
-	static GtkWidget *shortcuts_window;
-
-	gedit_debug (DEBUG_COMMANDS);
-
-	if (shortcuts_window == NULL)
-	{
-		GtkBuilder *builder;
-
-		builder = gtk_builder_new_from_resource ("/org/gnome/gedit/ui/gedit-shortcuts.ui");
-		shortcuts_window = GTK_WIDGET (gtk_builder_get_object (builder, "shortcuts-gedit"));
-
-		g_signal_connect (shortcuts_window,
-				  "destroy",
-				  G_CALLBACK (gtk_widget_destroyed),
-				  &shortcuts_window);
-
-		g_object_unref (builder);
-	}
-
-	if (GTK_WINDOW (window) != gtk_window_get_transient_for (GTK_WINDOW (shortcuts_window)))
-	{
-		gtk_window_set_transient_for (GTK_WINDOW (shortcuts_window), GTK_WINDOW (window));
-	}
-
-	gtk_widget_show_all (shortcuts_window);
-	gtk_window_present (GTK_WINDOW (shortcuts_window));
-}
 
 void
 _gedit_cmd_help_contents (GeditWindow *window)
 {
-	gedit_debug (DEBUG_COMMANDS);
-
 	gedit_app_show_help (GEDIT_APP (g_application_get_default ()),
-	                     GTK_WINDOW (window),
-	                     NULL,
-	                     NULL);
+			     GTK_WINDOW (window),
+			     NULL,
+			     NULL);
 }
 
 void
 _gedit_cmd_help_about (GeditWindow *window)
 {
-	static const gchar * const authors[] = {
-		"Alex Roberts",
-		"Chema Celorio",
-		"Evan Lawrence",
-		"Federico Mena Quintero <federico@novell.com>",
-		"Garrett Regier <garrettregier@gmail.com>",
-		"Ignacio Casal Quinteiro <icq@gnome.org>",
-		"James Willcox <jwillcox@gnome.org>",
-		"Jesse van den Kieboom <jessevdk@gnome.org>",
-		"Paolo Borelli <pborelli@gnome.org>",
-		"Paolo Maggi <paolo@gnome.org>",
-		"Sébastien Lafargue <slafargue@gnome.org>",
-		"Sébastien Wilmet <swilmet@gnome.org>",
-		"Steve Frécinaux <steve@istique.net>",
+	const gchar * const authors[] = {
+		/* Main authors: the top 5 (to not have a too long list), by
+		 * relative contribution (number of commits at the time of
+		 * writing).
+		 */
+		_("Main authors:"),
+		"   Sébastien Wilmet",
+		"   Paolo Borelli",
+		"   Ignacio Casal Quinteiro",
+		"   Jesse van den Kieboom",
+		"   Paolo Maggi",
+		"",
+		_("Many thanks also to:"),
+		"   Alex Roberts",
+		"   Chema Celorio",
+		"   Evan Lawrence",
+		"   Federico Mena Quintero",
+		"   Garrett Regier",
+		"   James Willcox",
+		"   Sébastien Lafargue",
+		"   Steve Frécinaux",
+		"",
+		_("and many other contributors."),
+		"",
 		NULL
 	};
 
 	static const gchar * const documenters[] = {
-		"Jim Campbell <jwcampbell@gmail.com>",
-		"Daniel Neel <dneelyep@gmail.com>",
-		"Sun GNOME Documentation Team <gdocteam@sun.com>",
-		"Eric Baudais <baudais@okstate.edu>",
+		"Daniel Neel",
+		"Eric Baudais",
+		"Jim Campbell",
+		"Sun GNOME Documentation Team",
 		NULL
 	};
 
-	gedit_debug (DEBUG_COMMANDS);
-
 	gtk_show_about_dialog (GTK_WINDOW (window),
-			       "program-name", "gedit",
 			       "authors", authors,
-			       "comments", _("gedit is a small and lightweight text editor for the GNOME desktop"),
-			       "copyright", "Copyright 1998-2021 – the gedit team",
+			       "comments", _("gedit is an easy-to-use and general-purpose text editor"),
+			       "copyright", "Copyright 1998-2024 – the gedit team",
 			       "license-type", GTK_LICENSE_GPL_2_0,
-			       "logo-icon-name", "org.gnome.gedit",
+			       "logo-icon-name", "gedit-logo",
 			       "documenters", documenters,
 			       "translator-credits", _("translator-credits"),
 			       "version", VERSION,
-			       "website", "http://www.gedit.org",
-			       "website-label", "www.gedit.org",
+			       "website", "https://gedit-technology.github.io/apps/gedit/",
 			       NULL);
 }
 

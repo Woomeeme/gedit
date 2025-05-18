@@ -3,11 +3,9 @@
 <TITLE>GeditApp</TITLE>
 GeditApp
 gedit_app_create_window
-gedit_app_set_window_title
 gedit_app_get_main_windows
-gedit_app_get_documents
 gedit_app_get_views
-gedit_app_process_window_event
+gedit_app_get_documents
 gedit_app_show_help
 <SUBSECTION Standard>
 GEDIT_APP
@@ -52,18 +50,13 @@ gedit_commands_save_all_documents
 GeditDocument
 gedit_document_new
 gedit_document_get_file
-gedit_document_get_short_name_for_display
-gedit_document_get_mime_type
-gedit_document_is_untouched
-gedit_document_is_untitled
-gedit_document_goto_line
-gedit_document_goto_line_offset
-gedit_document_set_language
 gedit_document_get_content_type
+gedit_document_get_mime_type
+gedit_document_set_language
 gedit_document_get_metadata
 gedit_document_set_metadata
-gedit_document_set_search_context
 gedit_document_get_search_context
+gedit_document_set_search_context
 <SUBSECTION Standard>
 GEDIT_DOCUMENT
 GEDIT_IS_DOCUMENT
@@ -152,33 +145,9 @@ GeditMessagePrivate
 </SECTION>
 
 <SECTION>
-<FILE>gedit-progress-info-bar</FILE>
-<TITLE>GeditProgressInfoBar</TITLE>
-GeditProgressInfoBar
-gedit_progress_info_bar_new
-gedit_progress_info_bar_set_icon_name
-gedit_progress_info_bar_set_markup
-gedit_progress_info_bar_set_text
-gedit_progress_info_bar_set_fraction
-gedit_progress_info_bar_pulse
-<SUBSECTION Standard>
-GEDIT_PROGRESS_INFO_BAR
-GEDIT_IS_PROGRESS_INFO_BAR
-GEDIT_TYPE_PROGRESS_INFO_BAR
-gedit_progress_info_bar_get_type
-GEDIT_PROGRESS_INFO_BAR_CLASS
-GEDIT_IS_PROGRESS_INFO_BAR_CLASS
-GEDIT_PROGRESS_INFO_BAR_GET_CLASS
-</SECTION>
-
-<SECTION>
 <FILE>gedit-statusbar</FILE>
 <TITLE>GeditStatusbar</TITLE>
 GeditStatusbar
-gedit_statusbar_new
-gedit_statusbar_set_window_state
-gedit_statusbar_set_overwrite
-gedit_statusbar_clear_overwrite
 gedit_statusbar_flash_message
 <SUBSECTION Standard>
 GEDIT_STATUSBAR
@@ -195,6 +164,8 @@ GEDIT_STATUSBAR_GET_CLASS
 <TITLE>GeditTab</TITLE>
 GeditTab
 GeditTabState
+gedit_tab_load_file
+gedit_tab_load_stream
 gedit_tab_get_view
 gedit_tab_get_document
 gedit_tab_get_from_document
@@ -222,13 +193,6 @@ GeditViewPrivate
 <TITLE>GeditView</TITLE>
 GeditView
 gedit_view_new
-gedit_view_cut_clipboard
-gedit_view_copy_clipboard
-gedit_view_paste_clipboard
-gedit_view_delete_selection
-gedit_view_select_all
-gedit_view_scroll_to_cursor
-gedit_view_set_font
 <SUBSECTION Standard>
 GEDIT_VIEW
 GEDIT_IS_VIEW
@@ -260,25 +224,23 @@ gedit_view_activatable_get_type
 GeditWindow
 GeditWindowState
 gedit_window_create_tab
-gedit_window_create_tab_from_location
-gedit_window_create_tab_from_stream
 gedit_window_close_tab
 gedit_window_close_all_tabs
 gedit_window_close_tabs
-gedit_window_get_active_tab
 gedit_window_set_active_tab
+gedit_window_get_active_tab
 gedit_window_get_active_view
 gedit_window_get_active_document
+gedit_window_get_tab_from_location
+gedit_window_get_views
 gedit_window_get_documents
 gedit_window_get_unsaved_documents
-gedit_window_get_views
-gedit_window_get_group
 gedit_window_get_side_panel
 gedit_window_get_bottom_panel
 gedit_window_get_statusbar
-gedit_window_get_state
-gedit_window_get_tab_from_location
+gedit_window_get_group
 gedit_window_get_message_bus
+gedit_window_get_state
 <SUBSECTION Standard>
 GEDIT_WINDOW
 GEDIT_IS_WINDOW
@@ -311,7 +273,6 @@ gedit_window_activatable_get_type
 <SECTION>
 <FILE>gedit-debug</FILE>
 GeditDebugSection
-DEBUG_VIEW
 DEBUG_PREFS
 DEBUG_WINDOW
 DEBUG_PANEL
@@ -321,7 +282,6 @@ DEBUG_DOCUMENT
 DEBUG_COMMANDS
 DEBUG_APP
 DEBUG_UTILS
-DEBUG_METADATA
 gedit_debug_init
 gedit_debug
 gedit_debug_message
@@ -352,18 +312,11 @@ gedit_menu_extension_get_type
 
 <SECTION>
 <FILE>gedit-utils</FILE>
-GBOOLEAN_TO_POINTER
-GPOINTER_TO_BOOLEAN
 gedit_utils_menu_position_under_tree_view
-gedit_utils_set_atk_name_description
-gedit_warning
-gedit_utils_replace_home_dir_with_tilde
 gedit_utils_basename_for_display
-gedit_utils_decode_uri
 gedit_utils_drop_get_uris
 gedit_utils_get_compression_type_from_content_type
 gedit_utils_is_valid_location
-gedit_utils_location_get_dirname_for_display
 gedit_utils_set_direct_save_filename
 gedit_utils_newline_type_to_string
 </SECTION>

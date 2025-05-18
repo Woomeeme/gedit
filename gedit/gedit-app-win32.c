@@ -1,5 +1,4 @@
 /*
- * gedit-app-win32.c
  * This file is part of gedit
  *
  * Copyright (C) 2010 - Jesse van den Kieboom
@@ -24,12 +23,16 @@
 
 #define SAVE_DATADIR DATADIR
 #undef DATADIR
+
 #include <io.h>
 #include <conio.h>
+
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0501
+#  define _WIN32_WINNT 0x0501
 #endif
+
 #include <windows.h>
+
 #define DATADIR SAVE_DATADIR
 #undef SAVE_DATADIR
 
@@ -40,26 +43,20 @@ struct _GeditAppWin32
 
 G_DEFINE_TYPE (GeditAppWin32, gedit_app_win32, GEDIT_TYPE_APP)
 
-static void
-gedit_app_win32_finalize (GObject *object)
-{
-	G_OBJECT_CLASS (gedit_app_win32_parent_class)->finalize (object);
-}
-
 static gchar *
-gedit_app_win32_help_link_id_impl (GeditApp    *app,
-                                   const gchar *name,
-                                   const gchar *link_id)
+gedit_app_win32_get_help_uri_impl (GeditApp    *app,
+                                   const gchar *name_of_user_manual,
+                                   const gchar *link_id_within_user_manual)
 {
-	if (link_id)
+	/* FIXME: name_of_user_manual is expected to be always "gedit" here. */
+
+	if (link_id_within_user_manual != NULL)
 	{
-		return g_strdup_printf ("http://library.gnome.org/users/gedit/stable/%s",
-		                        link_id);
+		return g_strdup_printf ("https://gedit-technology.github.io/user-manuals/gedit/%s",
+		                        link_id_within_user_manual);
 	}
-	else
-	{
-		return g_strdup ("http://library.gnome.org/users/gedit/stable/");
-	}
+
+	return g_strdup ("https://gedit-technology.github.io/user-manuals/gedit/");
 }
 
 static void
@@ -125,15 +122,12 @@ gedit_app_win32_startup (GApplication *application)
 static void
 gedit_app_win32_class_init (GeditAppWin32Class *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GApplicationClass *gapp_class = G_APPLICATION_CLASS (klass);
 	GeditAppClass *app_class = GEDIT_APP_CLASS (klass);
 
-	object_class->finalize = gedit_app_win32_finalize;
-
 	gapp_class->startup = gedit_app_win32_startup;
 
-	app_class->help_link_id = gedit_app_win32_help_link_id_impl;
+	app_class->get_help_uri = gedit_app_win32_get_help_uri_impl;
 }
 
 static void

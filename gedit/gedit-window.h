@@ -1,5 +1,4 @@
 /*
- * gedit-window.h
  * This file is part of gedit
  *
  * Copyright (C) 2005 - Paolo Maggi
@@ -21,15 +20,25 @@
 #ifndef GEDIT_WINDOW_H
 #define GEDIT_WINDOW_H
 
-#include <gtksourceview/gtksource.h>
-#include <gio/gio.h>
-#include <gtk/gtk.h>
-
+#include <tepl/tepl.h>
 #include <gedit/gedit-tab.h>
 #include <gedit/gedit-message-bus.h>
 
 G_BEGIN_DECLS
 
+/**
+ * GeditWindowState:
+ * @GEDIT_WINDOW_STATE_NORMAL: No flags.
+ * @GEDIT_WINDOW_STATE_SAVING: A tab is in saving state.
+ * @GEDIT_WINDOW_STATE_PRINTING: There is a printing operation on a tab.
+ * @GEDIT_WINDOW_STATE_LOADING: A tab is in loading or reverting state.
+ * @GEDIT_WINDOW_STATE_ERROR: A tab is in an error state.
+ *
+ * Flags for the state of a #GeditWindow. The enumerators are flags and can be
+ * combined. #GeditWindow combines and summarizes the state of its #GeditTab's
+ * into one #GeditWindowState value. See #GeditTabState for the more precise
+ * states.
+ */
 typedef enum
 {
 	GEDIT_WINDOW_STATE_NORMAL		= 0,
@@ -54,7 +63,6 @@ struct _GeditWindow
 {
 	GtkApplicationWindow window;
 
-	/*< private > */
 	GeditWindowPrivate *priv;
 };
 
@@ -63,116 +71,104 @@ struct _GeditWindowClass
 	GtkApplicationWindowClass parent_class;
 
 	/* Signals */
-	void	 (* tab_added)      	(GeditWindow *window,
-					 GeditTab    *tab);
-	void	 (* tab_removed)    	(GeditWindow *window,
-					 GeditTab    *tab);
-	void	 (* tabs_reordered) 	(GeditWindow *window);
-	void	 (* active_tab_changed)	(GeditWindow *window,
-				     	 GeditTab    *tab);
-	void	 (* active_tab_state_changed)
-					(GeditWindow *window);
+
+	void	(* tab_added)	(GeditWindow *window,
+				 GeditTab    *tab);
+
+	void	(* tab_removed)	(GeditWindow *window,
+				 GeditTab    *tab);
 };
 
-/* Public methods */
-GType 		 gedit_window_get_type 			(void) G_GNUC_CONST;
+GType		gedit_window_get_type			(void) G_GNUC_CONST;
 
-GeditTab	*gedit_window_create_tab		(GeditWindow         *window,
-							 gboolean             jump_to);
+GeditTab *	gedit_window_create_tab			(GeditWindow *window,
+							 gboolean     jump_to);
 
-GeditTab	*gedit_window_create_tab_from_location	(GeditWindow             *window,
-							 GFile                   *location,
-							 const GtkSourceEncoding *encoding,
-							 gint                     line_pos,
-							 gint                     column_pos,
-							 gboolean                 create,
-							 gboolean                 jump_to);
+void		gedit_window_close_tab			(GeditWindow *window,
+							 GeditTab    *tab);
 
-GeditTab	*gedit_window_create_tab_from_stream	(GeditWindow             *window,
-							 GInputStream            *stream,
-							 const GtkSourceEncoding *encoding,
-							 gint                     line_pos,
-							 gint                     column_pos,
-							 gboolean                 jump_to);
+void		gedit_window_close_all_tabs		(GeditWindow *window);
 
-void		 gedit_window_close_tab			(GeditWindow         *window,
-							 GeditTab            *tab);
+void		gedit_window_close_tabs			(GeditWindow *window,
+							 const GList *tabs);
 
-void		 gedit_window_close_all_tabs		(GeditWindow         *window);
+GeditTab *	gedit_window_get_active_tab		(GeditWindow *window);
 
-void		 gedit_window_close_tabs		(GeditWindow         *window,
-							 const GList         *tabs);
+void		gedit_window_set_active_tab		(GeditWindow *window,
+							 GeditTab    *tab);
 
-GeditTab	*gedit_window_get_active_tab		(GeditWindow         *window);
+GeditView *	gedit_window_get_active_view		(GeditWindow *window);
 
-void		 gedit_window_set_active_tab		(GeditWindow         *window,
-							 GeditTab            *tab);
+GeditDocument *	gedit_window_get_active_document	(GeditWindow *window);
 
-/* Helper functions */
-GeditView	*gedit_window_get_active_view		(GeditWindow         *window);
-GeditDocument	*gedit_window_get_active_document	(GeditWindow         *window);
+GList *		gedit_window_get_documents		(GeditWindow *window);
 
-/* Returns a newly allocated list with all the documents in the window */
-GList		*gedit_window_get_documents		(GeditWindow         *window);
+GList *		gedit_window_get_unsaved_documents	(GeditWindow *window);
 
-/* Returns a newly allocated list with all the documents that need to be
-   saved before closing the window */
-GList		*gedit_window_get_unsaved_documents 	(GeditWindow         *window);
+GList *		gedit_window_get_views			(GeditWindow *window);
 
-/* Returns a newly allocated list with all the views in the window */
-GList		*gedit_window_get_views			(GeditWindow         *window);
+GtkWindowGroup *gedit_window_get_group			(GeditWindow *window);
 
-GtkWindowGroup  *gedit_window_get_group			(GeditWindow         *window);
+TeplPanel *	gedit_window_get_side_panel		(GeditWindow *window);
 
-GtkWidget	*gedit_window_get_side_panel		(GeditWindow         *window);
+TeplPanel *	gedit_window_get_bottom_panel		(GeditWindow *window);
 
-GtkWidget	*gedit_window_get_bottom_panel		(GeditWindow         *window);
+GtkWidget *	gedit_window_get_statusbar		(GeditWindow *window);
 
-GtkWidget	*gedit_window_get_statusbar		(GeditWindow         *window);
+GeditWindowState gedit_window_get_state 		(GeditWindow *window);
 
-GeditWindowState gedit_window_get_state 		(GeditWindow         *window);
+GeditTab *	gedit_window_get_tab_from_location	(GeditWindow *window,
+							 GFile       *location);
 
-GeditTab        *gedit_window_get_tab_from_location	(GeditWindow         *window,
-							 GFile               *location);
+GeditMessageBus *gedit_window_get_message_bus		(GeditWindow *window);
 
-/* Message bus */
-GeditMessageBus	*gedit_window_get_message_bus		(GeditWindow         *window);
+/* Non exported functions */
 
-/*
- * Non exported functions
- */
-GtkWidget	*_gedit_window_get_multi_notebook	(GeditWindow         *window);
-GtkWidget	*_gedit_window_get_notebook		(GeditWindow         *window);
+G_GNUC_INTERNAL
+GtkWidget *	_gedit_window_get_notebook		(GeditWindow *window);
 
-GMenuModel	*_gedit_window_get_hamburger_menu	(GeditWindow         *window);
+G_GNUC_INTERNAL
+GMenuModel *	_gedit_window_get_hamburger_menu	(GeditWindow *window);
 
-GeditWindow	*_gedit_window_move_tab_to_new_window	(GeditWindow         *window,
-							 GeditTab            *tab);
-void             _gedit_window_move_tab_to_new_tab_group(GeditWindow         *window,
-                                                         GeditTab            *tab);
-gboolean	 _gedit_window_is_removing_tabs		(GeditWindow         *window);
+G_GNUC_INTERNAL
+GeditWindow *	_gedit_window_move_tab_to_new_window	(GeditWindow *window,
+							 GeditTab    *tab);
 
-const gchar	*_gedit_window_get_file_chooser_folder_uri
+G_GNUC_INTERNAL
+void		_gedit_window_move_tab_to_new_tab_group	(GeditWindow *window,
+							 GeditTab    *tab);
+
+G_GNUC_INTERNAL
+gboolean	_gedit_window_is_removing_tabs		(GeditWindow *window);
+
+G_GNUC_INTERNAL
+const gchar *	_gedit_window_get_file_chooser_folder_uri
 							(GeditWindow          *window,
 							 GtkFileChooserAction  action);
 
-void		 _gedit_window_set_file_chooser_folder_uri
+G_GNUC_INTERNAL
+void		_gedit_window_set_file_chooser_folder_uri
 							(GeditWindow          *window,
 							 GtkFileChooserAction  action,
 							 const gchar          *folder_uri);
 
-void		 _gedit_window_fullscreen		(GeditWindow         *window);
+G_GNUC_INTERNAL
+void		_gedit_window_fullscreen		(GeditWindow *window);
 
-void		 _gedit_window_unfullscreen		(GeditWindow         *window);
+G_GNUC_INTERNAL
+void		_gedit_window_unfullscreen		(GeditWindow *window);
 
-gboolean	 _gedit_window_is_fullscreen		(GeditWindow         *window);
+G_GNUC_INTERNAL
+gboolean	_gedit_window_is_fullscreen		(GeditWindow *window);
 
-GList		*_gedit_window_get_all_tabs		(GeditWindow         *window);
+G_GNUC_INTERNAL
+GList *		_gedit_window_get_all_tabs		(GeditWindow *window);
 
-GFile		*_gedit_window_pop_last_closed_doc	(GeditWindow         *window);
+G_GNUC_INTERNAL
+GFile *		_gedit_window_pop_last_closed_doc	(GeditWindow *window);
 
 G_END_DECLS
 
-#endif  /* GEDIT_WINDOW_H  */
+#endif /* GEDIT_WINDOW_H */
 
 /* ex:set ts=8 noet: */

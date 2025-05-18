@@ -10,7 +10,7 @@ is highly recommended that you install in a separate prefix instead of
 overwriting your system binaries.
 
 Note however that when running gedit from a custom prefix you will need to set
-many environment variables accordingly, for instance `PATH` and `XDG_DATA_DIR`.
+many environment variables accordingly, for instance `PATH` and `XDG_DATA_DIRS`.
 
 There exists several tools that GNOME developers use to take care of all of
 this. See the _Tools_ section below.
@@ -35,8 +35,8 @@ dependencies from source too, and it can become a complicated task if you do it
 manually.
 
 Also, during gedit development, gedit may depend on a not-yet-released
-development version of a GNOME dependency. So certain GNOME dependencies may
-need to be installed from Git.
+development version of a dependency. So certain dependencies may need to be
+installed from Git.
 
 That's why if you have difficulties installing recent enough versions of the
 dependencies, it is usually easier to use one of the tools explained in the next
@@ -51,14 +51,19 @@ There are several tools available that take care of the following:
 - Plus, for some tools: run in a container/sandbox.
 
 GNOME developers usually use one of these tools:
-- [JHBuild](https://developer.gnome.org/jhbuild/unstable/)
-- Or [BuildStream](https://buildstream.build/)
+- [Toolbx](https://containertoolbx.org/) (probably the easiest)
 - Or [Flatpak](https://flatpak.org/)
+- Or [JHBuild](https://gitlab.gnome.org/GNOME/jhbuild)
+
+General tips for gedit:
+- At the time of writing, no need to build GLib or GTK from source, taking their
+  latest stable versions are sufficient.
 
 JHBuild tips:
 - Try `ignore_suggests = True` in your jhbuildrc to have fewer dependencies to
   build (see the difference with "jhbuild list gedit"). Another solution is to
   put some modules in the skip variable in jhbuildrc.
+- Note that the moduleset for gedit may be out-of-date.
 
 Building the gedit module manually
 ----------------------------------
@@ -77,8 +82,8 @@ the gedit module from source.
 overwrite your system binaries.
 
 ```
-$ mkdir build && cd build/
-$ meson                      # Build configuration
+$ cd build/
+$ meson setup                # Build configuration
 $ ninja                      # Build
 [ Become root if necessary ]
 $ ninja install              # Installation
@@ -86,7 +91,7 @@ $ ninja install              # Installation
 
 ### Installation in a separate prefix
 
-Just change the above `meson` command by:
+Just change the above `meson setup` command by:
 ```
-$ meson --prefix /an/other/path
+$ meson setup --prefix /an/other/path
 ```

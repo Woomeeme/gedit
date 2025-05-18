@@ -4,25 +4,27 @@ gedit roadmap
 This page contains the plans for major code changes we hope to get done in the
 future.
 
-See also the [GtkSourceView](https://wiki.gnome.org/Projects/GtkSourceView/RoadMap).
-
-See the [NEWS file](../NEWS) for a detailed history.
-
-Improve gedit on Windows
-------------------------
+Take care and fix the common bugs
+---------------------------------
 
 Status: **in progress**
 
-[gedit is now available on the Microsoft Store](https://www.microsoft.com/store/apps/9PL1J21XF0PT).
-The integration with Windows is not perfect, but it works. It is planned to
-improve gedit for Windows over time.
+See the list in the [common-bugs.md](common-bugs.md) file.
 
-Replace search and replace dialog window by an horizontal bar below the text
-----------------------------------------------------------------------------
+Continue to make the gedit source code more re-usable
+-----------------------------------------------------
+
+Status: **in progress** (this is an ongoing effort)
+
+Develop and use the [Gedit Technology](https://gedit-technology.github.io/) set
+of libraries.
+
+Rework the search & replace UI
+------------------------------
 
 Status: **todo**
 
-To not hide the text.
+Have an horizontal bar, to not occlude the text.
 
 Be able to quit the application with all documents saved, and restored on next start
 ------------------------------------------------------------------------------------
@@ -30,55 +32,25 @@ Be able to quit the application with all documents saved, and restored on next s
 Status: **todo**
 
 Even for unsaved and untitled files, be able to quit gedit, restart it later and
-come back to the state before with all tabs restored.
+come back to the previous state with all tabs restored.
 
 Improve the workflow for printing to paper
 ------------------------------------------
 
 Status: **todo**
 
-Implement it like in Firefox, show first a preview of the file to print.
-
-Handle problem with large files or files containing very long lines
--------------------------------------------------------------------
-
-Status: **started in Tepl**
-
-As a stopgap measure, prevent those files from being loaded in the first place,
-show first an infobar with a warning message.
-
-Longer-term solution: fix the performance problem in GTK for very long lines.
-
-For very big file size (e.g. a 1GB log file or SQL dump), it's more complicated
-because the whole file is loaded in memory. It needs another data structure
-implementation for the GtkTextView API.
+Show first a preview of the file to print and do the configuration from there.
 
 Use native file chooser dialog windows (GtkFileChooserNative)
 -------------------------------------------------------------
 
-Status: **in progress**
+Status: **todo**
 
 To have the native file chooser on MS Windows, and use the Flatpak portal.
 
-Do not allow incompatible plugins to be loaded
-----------------------------------------------
-
-Status: **todo**
-
-There are currently no checks to see if a plugin is compatible with the gedit
-version. Currently enabling a plugin can make gedit to crash.
-
-Solution: include the gedit plugin API version in the directory names where
-plugins need to be installed. Better solution: see
-[this libpeas feature request](https://bugzilla.gnome.org/show_bug.cgi?id=642694#c15).
-
-Making gedit suitable on a smartphone
--------------------------------------
-
-Status: **in progress**
-
-gedit is installed by default with the [Librem 5](https://puri.sm/products/librem-5/)
-smartphone.
+This task requires to rework the file loading and saving code. To have a
+different - but still user-friendly - way to choose the character encoding and
+line ending type.
 
 Avoid the need for gedit forks
 ------------------------------
@@ -91,16 +63,6 @@ There are several forks of gedit available: [Pluma](https://github.com/mate-desk
 of gedit.
 
 The goal is to make gedit suitable for MATE and Linux Mint. This can be
-implemented by adding a “gedit-classic” configuration option.
-
-Better C language support
--------------------------
-
-Status: **todo**
-
-- Code completion with Clang.
-- Align function parameters on the parenthesis (function definition /
-  function call).
-- Generate and insert GTK-Doc comment header for a function.
-- Split/join lines of a C comment with `*` at beginning of each line, ditto when
-  pressing Enter (insert `*` at the beginning of the new line).
+implemented by adding a “gedit-classic” configuration option. Or implement it
+similarly to LibreOffice, to give the user a choice between several UI
+paradigms.

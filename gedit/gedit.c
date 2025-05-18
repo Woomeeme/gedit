@@ -1,5 +1,4 @@
 /*
- * gedit.c
  * This file is part of gedit
  *
  * Copyright (C) 2005 - Paolo Maggi
@@ -19,84 +18,24 @@
  */
 
 #include "config.h"
-
 #include "gedit-app.h"
 
-#if defined OS_OSX
-#  include "gedit-app-osx.h"
-#elif defined G_OS_WIN32
-#  include "gedit-app-win32.h"
+#if OS_MACOS
+#include "gedit-app-osx.h"
 #endif
 
-#include <glib.h>
+#ifdef G_OS_WIN32
+#include "gedit-app-win32.h"
+#endif
+
 #include <locale.h>
 #include <libintl.h>
+#include <tepl/tepl.h>
 
 #include "gedit-dirs.h"
 #include "gedit-debug.h"
+#include "gedit-factory.h"
 #include "gedit-settings.h"
-
-#ifdef G_OS_WIN32
-#include <gmodule.h>
-static GModule *libgedit_dll = NULL;
-
-/* This code must live in gedit.exe, not in libgedit.dll, since the whole
- * point is to find and load libgedit.dll.
- */
-static gboolean
-gedit_w32_load_private_dll (void)
-{
-	gchar *dllpath;
-	gchar *prefix;
-
-	prefix = g_win32_get_package_installation_directory_of_module (NULL);
-
-	if (prefix != NULL)
-	{
-		/* Instead of g_module_open () it may be possible to do any of the
-		 * following:
-		 * A) Change PATH to "${dllpath}/lib/gedit;$PATH"
-		 * B) Call SetDllDirectory ("${dllpath}/lib/gedit")
-		 * C) Call AddDllDirectory ("${dllpath}/lib/gedit")
-		 * But since we only have one library, and its name is known, may as well
-		 * use gmodule.
-		 */
-		dllpath = g_build_filename (prefix, "lib", "gedit", "lib" PACKAGE_STRING ".dll", NULL);
-		g_free (prefix);
-
-		libgedit_dll = g_module_open (dllpath, 0);
-		if (libgedit_dll == NULL)
-		{
-			g_printerr ("Failed to load '%s': %s\n",
-			            dllpath, g_module_error ());
-		}
-
-		g_free (dllpath);
-	}
-
-	if (libgedit_dll == NULL)
-	{
-		libgedit_dll = g_module_open ("lib" PACKAGE_STRING ".dll", 0);
-		if (libgedit_dll == NULL)
-		{
-			g_printerr ("Failed to load 'lib" PACKAGE_STRING ".dll': %s\n",
-			            g_module_error ());
-		}
-	}
-
-	return (libgedit_dll != NULL);
-}
-
-static void
-gedit_w32_unload_private_dll (void)
-{
-	if (libgedit_dll)
-	{
-		g_module_close (libgedit_dll);
-		libgedit_dll = NULL;
-	}
-}
-#endif /* G_OS_WIN32 */
 
 static void
 setup_i18n (void)
@@ -112,32 +51,51 @@ setup_i18n (void)
 	textdomain (GETTEXT_PACKAGE);
 }
 
+static void
+setup_pango (void)
+{
+#ifdef G_OS_WIN32
+	PangoFontMap *font_map;
+
+	/* Prefer the fontconfig backend of pangocairo. The win32 backend gives
+	 * ugly fonts. The fontconfig backend is what is used on Linux.
+	 * Another way would be to set the environment variable:
+	 * PANGOCAIRO_BACKEND=fontconfig
+	 * See also the documentation of pango_cairo_font_map_new().
+	 */
+	font_map = pango_cairo_font_map_new_for_font_type (CAIRO_FONT_TYPE_FT);
+
+	if (font_map != NULL)
+	{
+		pango_cairo_font_map_set_default (PANGO_CAIRO_FONT_MAP (font_map));
+		g_object_unref (font_map);
+	}
+#endif
+}
+
 int
 main (int argc, char *argv[])
 {
 	GType type;
+	GeditFactory *factory;
 	GeditApp *app;
 	gint status;
 
-#if defined OS_OSX
+#if OS_MACOS
 	type = GEDIT_TYPE_APP_OSX;
 #elif defined G_OS_WIN32
-	if (!gedit_w32_load_private_dll ())
-	{
-		return 1;
-	}
-
 	type = GEDIT_TYPE_APP_WIN32;
 #else
 	type = GEDIT_TYPE_APP;
 #endif
 
-	/* NOTE: we should not make any calls to the gedit API before the
-	 * private library is loaded.
-	 */
 	gedit_dirs_init ();
-
 	setup_i18n ();
+	setup_pango ();
+	tepl_init ();
+
+	factory = gedit_factory_new ();
+	tepl_abstract_factory_set_singleton (TEPL_ABSTRACT_FACTORY (factory));
 
 	app = g_object_new (type,
 	                    "application-id", "org.gnome.gedit",
@@ -162,11 +120,8 @@ main (int argc, char *argv[])
 		                     G_OBJECT (app)->ref_count);
 	}
 
+	tepl_finalize ();
 	gedit_dirs_shutdown ();
-
-#ifdef G_OS_WIN32
-	gedit_w32_unload_private_dll ();
-#endif
 
 	return status;
 }

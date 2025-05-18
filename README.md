@@ -1,13 +1,15 @@
-gedit - The GNOME text editor
-=============================
+gedit
+=====
 
-gedit is the text editor of the GNOME desktop environment.
+gedit is an easy-to-use and general-purpose text editor. Its development started
+in 1998, at the beginnings of the GNOME project, with a good integration with
+that desktop environment.
 
-The first goal of gedit is to be easy to use, with a simple interface by
-default. More advanced features are available by enabling plugins.
+You can use it to write simple notes and documents, or you can enable more
+advanced features that are useful for software development.
 
-See the [gedit official website](https://wiki.gnome.org/Apps/Gedit) for
-more information.
+See the [gedit website](https://gedit-technology.github.io/apps/gedit/) for more
+information.
 
 License
 -------
@@ -18,10 +20,10 @@ later, see the file [COPYING](COPYING) for more information.
 Dependencies
 ------------
 
-gedit uses the GTK GUI toolkit.
+gedit depends on GTK 3 and
+[Gedit Technology](https://gedit-technology.github.io/).
 
-For a complete list of dependencies, see the file [meson.build](meson.build) and
-search the section “Dependencies”.
+For a complete list of dependencies, see the [meson.build](meson.build) file.
 
 Installation
 ------------
@@ -32,18 +34,15 @@ How to report bugs
 ------------------
 
 Please read
-[the wiki page on how to report bugs](https://wiki.gnome.org/Apps/Gedit/ReportingBugs),
+[the web page on how to report bugs](https://gedit-technology.github.io/apps/gedit/reporting-bugs.html),
 it contains a list of frequently reported bugs and a link to the bug
 tracker.
 
 Development resources
 ---------------------
 
-- [gedit on GitLab](https://gitlab.gnome.org/GNOME/gedit)
-- [gedit-plugins on GitLab](https://gitlab.gnome.org/GNOME/gedit-plugins)
+- [gedit projects on GitLab](https://gitlab.gnome.org/World/gedit)
 - [Tarballs](https://download.gnome.org/sources/gedit/)
-- [Roadmap](docs/roadmap.md)
-- [gedit wiki attic](https://wiki.gnome.org/Apps/Gedit/Attic)
 
 Contributions
 -------------
@@ -51,4 +50,4 @@ Contributions
 gedit development relies on voluntary contributions and everyone is invited
 to help.
 
-See the file [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
+See the [CONTRIBUTING.md](CONTRIBUTING.md) file for more information.

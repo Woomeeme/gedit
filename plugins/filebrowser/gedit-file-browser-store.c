@@ -1032,7 +1032,7 @@ model_node_update_visibility (GeditFileBrowserStore *model,
 			{
 				GPatternSpec *spec = g_ptr_array_index (model->priv->binary_pattern_specs, i);
 
-				if (g_pattern_match (spec, name_length, node->name, name_reversed))
+				if (g_pattern_spec_match (spec, name_length, node->name, name_reversed))
 				{
 					node->flags |= GEDIT_FILE_BROWSER_STORE_FLAG_IS_FILTERED;
 					g_free (name_reversed);
@@ -1449,7 +1449,6 @@ model_remove_node_children (GeditFileBrowserStore *model,
 {
 	FileBrowserNodeDir *dir;
 	GtkTreePath *path_child;
-	FileBrowserNode *child;
 	GSList *list;
 
 	if (node == NULL || !NODE_IS_DIR (node))
@@ -1478,19 +1477,10 @@ model_remove_node_children (GeditFileBrowserStore *model,
 
 	list = g_slist_copy (dir->children);
 
-	for (GSList *item = g_slist_next (list); item; item = item->next)
-	{
-		child = item->data;
-		g_assert (!NODE_IS_DUMMY (child));
-		model_remove_node (model, child, path_child, free_nodes);
-	}
+	for (GSList *item = list; item; item = item->next)
+		model_remove_node (model, (FileBrowserNode *)(item->data), path_child, free_nodes);
 
 	g_slist_free (list);
-
-	child = dir->children->data;
-	g_assert (NODE_IS_DUMMY (child));
-	model_remove_node (model, child, path_child, free_nodes);
-
 	gtk_tree_path_free (path_child);
 }
 
@@ -1565,6 +1555,24 @@ model_clear (GeditFileBrowserStore *model,
 
 	model_remove_node_children (model, model->priv->virtual_root, path, free_nodes);
 	gtk_tree_path_free (path);
+
+	/* Remove the dummy if there is one */
+	if (model->priv->virtual_root)
+	{
+		FileBrowserNodeDir *dir = FILE_BROWSER_NODE_DIR (model->priv->virtual_root);
+
+		if (dir->children != NULL)
+		{
+			FileBrowserNode *dummy = (FileBrowserNode *)(dir->children->data);
+
+			if (NODE_IS_DUMMY (dummy) && model_node_visibility (model, dummy))
+			{
+				path = gtk_tree_path_new_first ();
+				row_deleted (model, dummy, path);
+				gtk_tree_path_free (path);
+			}
+		}
+	}
 }
 
 static void
@@ -1909,17 +1917,20 @@ model_add_nodes_batch (GeditFileBrowserStore *model,
 static gchar const *
 backup_content_type (GFileInfo *info)
 {
-	gchar const *content;
+	if (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_STANDARD_IS_BACKUP) &&
+	    g_file_info_get_is_backup (info))
+	{
+		gchar const *content = g_file_info_get_content_type (info);
 
-	if (!g_file_info_get_is_backup (info))
-		return NULL;
+		if (content == NULL || g_content_type_equals (content, "application/x-trash"))
+		{
+			return "text/plain";
+		}
 
-	content = g_file_info_get_content_type (info);
+		return content;
+	}
 
-	if (!content || g_content_type_equals (content, "application/x-trash"))
-		return "text/plain";
-
-	return content;
+	return NULL;
 }
 
 static gboolean
@@ -1934,7 +1945,8 @@ content_type_is_text (gchar const *content_type)
 		return TRUE;
 
 #ifndef G_OS_WIN32
-	return g_content_type_is_a (content_type, "text/plain");
+	return (g_content_type_is_a (content_type, "text/plain") ||
+		g_content_type_equals (content_type, "application/x-zerosize"));
 #else
 	if (g_content_type_is_a (content_type, "text"))
 		return TRUE;
@@ -1942,8 +1954,7 @@ content_type_is_text (gchar const *content_type)
 	/* This covers a rare case in which on Windows the PerceivedType is
 	   not set to "text" but the Content Type is set to text/plain */
 	mime = g_content_type_get_mime_type (content_type);
-	ret = g_strcmp0 (mime, "text/plain");
-
+	ret = g_strcmp0 (mime, "text/plain") == 0;
 	g_free (mime);
 
 	return ret;
@@ -1986,8 +1997,13 @@ file_browser_node_set_from_info (GeditFileBrowserStore *model,
 		free_info = TRUE;
 	}
 
-	if (g_file_info_get_is_hidden (info) || g_file_info_get_is_backup (info))
+	if ((g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_STANDARD_IS_HIDDEN) &&
+	     g_file_info_get_is_hidden (info)) ||
+	    (g_file_info_has_attribute (info, G_FILE_ATTRIBUTE_STANDARD_IS_BACKUP) &&
+	     g_file_info_get_is_backup (info)))
+	{
 		node->flags |= GEDIT_FILE_BROWSER_STORE_FLAG_IS_HIDDEN;
+	}
 
 	if (g_file_info_get_file_type (info) == G_FILE_TYPE_DIRECTORY)
 	{
@@ -3423,11 +3439,6 @@ delete_file_finished (GFile        *file,
 			/* Job has been cancelled, end the job */
 			async_data_free (data);
 			return;
-		}
-		else
-		{
-			/* Process the next file */
-			data->iter = data->iter->next;
 		}
 	}
 

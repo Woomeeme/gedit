@@ -30,21 +30,22 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GeditStatusbar, gedit_statusbar, GEDIT, STATUSBAR, GtkStatusbar)
 
-GtkWidget	*gedit_statusbar_new			(void);
+G_GNUC_INTERNAL
+GeditStatusbar *_gedit_statusbar_new			(void);
 
-void		 gedit_statusbar_set_window_state	(GeditStatusbar   *statusbar,
-							 GeditWindowState  state,
-							 gint              num_of_errors);
+G_GNUC_INTERNAL
+void		_gedit_statusbar_set_window		(GeditStatusbar *statusbar,
+							 GeditWindow    *window);
 
-void		 gedit_statusbar_set_overwrite		(GeditStatusbar   *statusbar,
-							 gboolean          overwrite);
-
-void		 gedit_statusbar_clear_overwrite 	(GeditStatusbar   *statusbar);
-
-void		 gedit_statusbar_flash_message		(GeditStatusbar   *statusbar,
+void		gedit_statusbar_flash_message		(GeditStatusbar   *statusbar,
 							 guint             context_id,
 							 const gchar      *format,
 							 ...) G_GNUC_PRINTF(3, 4);
+
+G_GNUC_INTERNAL
+void		_gedit_statusbar_flash_generic_message	(GeditStatusbar *statusbar,
+							 const gchar    *format,
+							 ...) G_GNUC_PRINTF(2, 3);
 
 G_END_DECLS
 

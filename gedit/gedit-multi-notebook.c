@@ -21,7 +21,7 @@
  */
 
 #include "gedit-multi-notebook.h"
-
+#include <tepl/tepl.h>
 #include "gedit-enum-types-private.h"
 #include "gedit-settings.h"
 #include "gedit-tab-private.h"
@@ -37,6 +37,7 @@ struct _GeditMultiNotebookPrivate
 
 	GeditNotebookShowTabsModeType show_tabs_mode;
 	GSettings *ui_settings;
+	TeplSettingsBindingGroup *settings_binding_group;
 
 	guint      show_tabs : 1;
 	guint      removing_notebook : 1;
@@ -130,6 +131,13 @@ gedit_multi_notebook_dispose (GObject *object)
 	GeditMultiNotebook *mnb = GEDIT_MULTI_NOTEBOOK (object);
 
 	g_clear_object (&mnb->priv->ui_settings);
+
+	if (mnb->priv->settings_binding_group != NULL)
+	{
+		tepl_settings_binding_group_unbind (mnb->priv->settings_binding_group, object);
+		tepl_settings_binding_group_free (mnb->priv->settings_binding_group);
+		mnb->priv->settings_binding_group = NULL;
+	}
 
 	G_OBJECT_CLASS (gedit_multi_notebook_parent_class)->dispose (object);
 }
@@ -677,19 +685,20 @@ gedit_multi_notebook_init (GeditMultiNotebook *mnb)
 	priv->show_tabs_mode = GEDIT_NOTEBOOK_SHOW_TABS_ALWAYS;
 	priv->show_tabs = TRUE;
 
+	priv->settings_binding_group = tepl_settings_binding_group_new ();
 	priv->ui_settings = g_settings_new ("org.gnome.gedit.preferences.ui");
-	g_settings_bind (priv->ui_settings,
-			 GEDIT_SETTINGS_SHOW_TABS_MODE,
-			 mnb,
-			 "show-tabs-mode",
+
+	g_settings_bind (priv->ui_settings, GEDIT_SETTINGS_SHOW_TABS_MODE,
+			 mnb, "show-tabs-mode",
 			 G_SETTINGS_BIND_GET | G_SETTINGS_BIND_SET);
+	tepl_settings_binding_group_add (priv->settings_binding_group, "show-tabs-mode");
 
 	priv->active_notebook = gedit_notebook_new ();
 	add_notebook (mnb, priv->active_notebook, TRUE);
 }
 
 GeditMultiNotebook *
-gedit_multi_notebook_new ()
+gedit_multi_notebook_new (void)
 {
 	return g_object_new (GEDIT_TYPE_MULTI_NOTEBOOK, NULL);
 }

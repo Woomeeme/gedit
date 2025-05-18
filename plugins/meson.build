@@ -1,5 +1,6 @@
 # Keep the autotools convention for shared module suffix because GModule
 # depends on it: https://gitlab.gnome.org/GNOME/glib/issues/520
+# TODO: the GLib issue is fixed/closed, so adapt the build instructions accordingly.
 module_suffix = []
 if host_machine.system() == 'darwin'
   module_suffix = 'so'
@@ -18,20 +19,8 @@ msgfmt_plugin_cmd = [
 subdir('docinfo')
 subdir('filebrowser')
 subdir('modelines')
-subdir('openlinks')
 subdir('quickhighlight')
 subdir('sort')
-if gspell_dep.found()
-  subdir('spell')
-endif
+subdir('spell')
+subdir('textsize')
 subdir('time')
-
-if get_option('python')
-  if get_option('plugin_externaltools')
-    subdir('externaltools')
-  endif
-
-  subdir('pythonconsole')
-  subdir('quickopen')
-  subdir('snippets')
-endif

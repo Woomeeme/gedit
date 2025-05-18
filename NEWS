@@ -1,3 +1,219 @@
+News in 48.1, 2024-12-07
+------------------------
+This is _not_ a bug-fix release, it contains other changes. The current plan is
+to release gedit 49.0 at the same time as GNOME 49.0, to come back to the same
+numbers as GNOME, but with more frequent releases like this one.
+
+* Removed plugins: External Tools, Snippets, Python Console.
+* Text Size plugin: rewrite in C.
+* Remove the background-pattern feature (with the grid).
+* Fix bug on Wayland to unmaximize the window.
+* Code refactorings.
+* Fix compilation warning.
+* Translation updates.
+
+News in 48.0, 2024-09-14
+------------------------
+New features:
+* Full support of light/dark GTK theme variants. Configuration is done in the
+  Preferences dialog -> Font & Colors.
+
+Visible changes:
+* Add missing tooltips to some buttons (Sabri Ünal).
+* The Text Size plugin has been moved from gedit-plugins to this repository, and
+  is now enabled by default.
+* Remove Quick Open plugin.
+* Mark some plugins as "buggy plugins": External Tools and Snippets.
+
+Bug fixes:
+* Fix some warning messages that appeared at runtime.
+* Fix a crash.
+
+For Microsoft Windows:
+* Add Portable Executable resource icon, to associate an icon with the
+  executable (Hernan Martinez, gwillems and Sébastien Wilmet).
+* Make gedit work without patches for MINGW-packages.
+
+Misc:
+* Some code refactorings.
+* Update the user manual for the new feature ("Change the color scheme" page).
+* Side panel: adapt to latest libgedit-tepl API.
+* Bottom panel: port to TeplPanel.
+* Build instructions: Meson refactorings.
+* Translation updates (GNOME Translation Project contributors).
+
+-- Sébastien Wilmet (main contributor and reviewer).
+
+News in 47.0, 2024-04-27 (stable version)
+-----------------------------------------
+Web presence:
+* New website for gedit: https://gedit-technology.github.io/apps/gedit/
+* Update URLs for gedit-technology.net -> https://gedit-technology.github.io/
+* Start to migrate away from wiki.gnome.org.
+
+Branding:
+* Restore the previous app icons and logo.
+
+New features:
+* Experimental: add light/dark GTK theme variant configuration (as a hidden
+  GSettings key for now).
+
+Removed features:
+* Localization (l10n): all the translations are disabled, gedit is available in
+  English only because some underlying modules are not on l10n.gnome.org or
+  equivalent.
+* In the preferences dialog, remove the toolbar to install/uninstall color
+  schemes. Third-party color schemes are still supported, but the XML file(s)
+  need to be copied into the right directory by another means, see:
+  https://gedit-technology.github.io/developer-docs/extra/libgedit-gtksourceview/style-schemes.html
+  or also the gedit user help documentation.
+
+Under-the-hood changes:
+* Adapt the code for libgedit-gtksourceview API changes.
+* Adapt the code for the Tepl -> libgedit-tepl module rename.
+* Code refactorings, various improvements and bug fixes.
+* Continue to reduce usage of *.ui files, write code instead.
+* Use newer GLib API at some places.
+* Add -Wshadow to the CFLAGS and fix the corresponding warnings.
+
+For plugins:
+* Some API changes (see the page documenting the API breaks).
+* Improve the API documentation.
+
+Misc:
+* Rename *.appdata.xml to *.metainfo.xml and do some updates to that file.
+* Update documentation for contributors.
+* Links to some third-party plugins.
+
+News in 46.1, 2023-08-06
+------------------------
+* Fix a -Wformat-security build issue.
+* Add a set of warning CFLAGS, and fix the code accordingly.
+* Flatpak update.
+
+News in 46.0, 2023-07-29
+------------------------
+* Adapt for Amtk -> libgedit-amtk rename.
+* API changes for plugins: see the API docs.
+* Code refactorings in GeditWindow, and delegate some of its work to new
+  classes: GeditHeaderBar and GeditSidePanel.
+* Replace GeditMenuStackSwitcher by TeplPanelSwitcherMenu.
+* Replace GeditStatusMenuButton by TeplStatusMenuButton.
+* Remove a small feature from the statusbar: the small icons for the window
+  state. You now need to look at each individual tab to know its state.
+* Build: replace inline_side_panel_switcher option -> headerbar option.
+* Bug fixes for macOS.
+* Translation updates.
+
+News in 45.0, 2023-06-23
+------------------------
+* User manual: a few improvements.
+* Translation updates.
+
+News in 45.alpha, 2023-04-26
+----------------------------
+
+gedit now depends on libgedit-gtksourceview instead of GtkSourceView:
+  https://github.com/gedit-technology/libgedit-gtksourceview
+  https://gedit-technology.net/
+
+Build system:
+  - Add inline_side_panel_switcher option.
+  - No longer generate the Vala *.vapi file, rely on the GIR instead.
+  - Maintenance: don't use deprecated Meson features.
+
+The core of the application:
+  - Add Ctrl+comma shortcut to open the Preferences dialog.
+  - Documents Panel: improve how the filenames are ellipsized.
+  - A few API changes in GeditWindow and GeditTab, see the API reference manual.
+  - Bump API version to 45.
+
+Plugins:
+  - Insert Date/Time: add keyboard shortcut.
+
+General:
+  - Code refactorings, robustness improvements, use more Tepl features,
+    bug fixes, etc.
+  - Documentation improvements.
+  - Update Flatpak manifest.
+  - Translation updates.
+
+News in 44.1, 2023-01-04
+------------------------
+* macOS: fix build.
+* Windows: improvements and bug fix.
+* Flatpak update.
+* Translation updates.
+
+News in 44.0, 2023-01-01
+------------------------
+Misc:
+  - Donations: change to Liberapay link.
+  - Create https://gedit-technology.net/ (mainly for developers).
+
+User manual:
+  - Available online:
+    https://gedit-technology.net/user-manuals/gedit/
+    (used on platforms where Yelp is unavailable: macOS and Windows).
+  - Improvements to the content.
+
+The core of the application:
+  - Rework the statusbar.
+  - Improve the vocabulary used in the dialog for choosing favorite encodings.
+  - Improve a little the API docs.
+
+Plugins:
+  - File browser: expand/collapse item on right/left keypress.
+
+General:
+  - Minor bug fixes.
+  - Use more Tepl features.
+  - Code refactorings.
+  - Translation updates.
+
+News in 43.1, 2022-11-04
+------------------------
+* Be able to build with Meson >= 0.61
+* AppData fix
+* Add some BuildStream element files in build-aux/buildstream/
+
+News in 43.0, 2022-11-03
+------------------------
+* Come back to the source code of gedit 40.0 and continue again from there.
+  It is based on the Tepl and Amtk libraries.
+  The single Open button is again split in two with a drop-down menu for recent
+  files.
+
+* Workaround for bug: text cut off at the bottom in certain situations.
+
+* Change app name from "Text Editor" back to "gedit".
+* AppData: some updates, take a new screenshot.
+* Remove gitlab-ci.
+* Remove outdated build-aux/osx/ directory (several MB).
+* Flatpak: generate JSON manifest from YAML manifest.
+* File browser plugin: more robust check if Nautilus GSettings can be used, even
+  if the key doesn't exist anymore.
+* Rework the I/O error info bars.
+* Handle application/x-zerosize mimetype.
+* Small code maintenance.
+* Documentation updates.
+* Translation updates.
+
+News in 43.alpha, 2022-07-06
+----------------------------
+* Update app description.
+* Translation updates.
+
+News in 42.1, 2022-05-27
+------------------------
+* Translation updates.
+
+News in 42.0, 2022-04-01
+----------------------------
+* Rename display name back to gedit
+* Build fix
+* Translation updates
+
 News in 41.0, 2022-02-14
 ----------------------------
 * Fix some crashes, one when opening files, another when

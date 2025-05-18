@@ -1,9 +1,12 @@
 #! /bin/sh
-
 set -e
 
 if [ "$1" = remove ]; then
-        update-alternatives --remove gnome-text-editor /usr/bin/gedit || true
+    if update-alternatives --list gnome-text-editor >/dev/null 2>&1; then
+        update-alternatives --remove gnome-text-editor /usr/bin/gedit
+    fi
 fi
 
 #DEBHELPER#
+
+exit 0

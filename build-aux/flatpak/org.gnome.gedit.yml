@@ -1,3 +1,5 @@
+# After editing this file run generate-json-manifest.sh.
+# Don't edit the *.json manifest file by hand.
 ---
 app-id: org.gnome.gedit
 runtime: org.gnome.Platform
@@ -16,6 +18,8 @@ finish-args:
   - "--metadata=X-DConf=migrate-path=/org/gnome/gedit/"
   # Needed at least for the integrated file browser plugin:
   - "--filesystem=host"
+  # GVfs GIO APIs access using backend URIs
+  - "--filesystem=xdg-run/gvfsd"
   # For opening files from remote locations (with GVfs):
   - "--talk-name=org.gtk.vfs.*"
 
@@ -43,31 +47,53 @@ modules:
     buildsystem: meson
     config-opts:
       - "-Dlua51=false"
-      - "-Dvapi=true"
-      - "-Ddemos=false"
       - "-Dglade_catalog=false"
+      - "-Ddemos=false"
     sources:
       - type: archive
-        url: https://download.gnome.org/sources/libpeas/1.28/libpeas-1.28.0.tar.xz
-        sha256: 42d91993b46ed50f16add6d9577ecc22beb8e2dffa7101e2232c2b63733b8b15
+        url: https://download.gnome.org/sources/libpeas/1.36/libpeas-1.36.0.tar.xz
+        sha256: 297cb9c2cccd8e8617623d1a3e8415b4530b8e5a893e3527bbfd1edd13237b4c
 
   - name: gspell
     cleanup:
       - "/bin"
     sources:
       - type: archive
-        url: https://download.gnome.org/sources/gspell/1.9/gspell-1.9.1.tar.xz
-        sha256: dcbb769dfdde8e3c0a8ed3102ce7e661abbf7ddf85df08b29915e92cd723abdd
+        url: https://download.gnome.org/sources/gspell/1.12/gspell-1.12.2.tar.xz
+        sha256: b4e993bd827e4ceb6a770b1b5e8950fce3be9c8b2b0cbeb22fdf992808dd2139
 
-  - name: uchardet
-    buildsystem: cmake-ninja
+  - name: libgedit-amtk
+    buildsystem: meson
+    config-opts:
+      - "-Dgtk_doc=false"
     sources:
-      - type: archive
-        url: https://www.freedesktop.org/software/uchardet/releases/uchardet-0.0.6.tar.xz
-        sha256: 8351328cdfbcb2432e63938721dd781eb8c11ebc56e3a89d0f84576b96002c61
+      - type: git
+        url: https://github.com/gedit-technology/libgedit-amtk.git
+        branch: main
+
+  - name: libgedit-gtksourceview
+    buildsystem: meson
+    config-opts:
+      - "-Dgtk_doc=false"
+      - "-Dtests_relying_on_external_programs=false"
+    sources:
+      - type: git
+        url: https://github.com/gedit-technology/libgedit-gtksourceview.git
+        branch: main
+
+  - name: tepl
+    buildsystem: meson
+    config-opts:
+      - "-Dgtk_doc=false"
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/swilmet/tepl.git
+        branch: main
 
   - name: gedit
     buildsystem: meson
+    config-opts:
+      - "-Dgtk_doc=false"
     sources:
       - type: git
         url: https://gitlab.gnome.org/GNOME/gedit.git

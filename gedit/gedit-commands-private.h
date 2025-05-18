@@ -67,6 +67,7 @@ void		_gedit_cmd_file_close			(GSimpleAction *action,
 void		_gedit_cmd_file_close_all		(GSimpleAction *action,
 							 GVariant      *parameter,
 							 gpointer       user_data);
+void		_gedit_cmd_file_close_window		(GeditWindow *window);
 void		_gedit_cmd_file_quit			(GSimpleAction *action,
 							 GVariant      *parameter,
 							 gpointer       user_data);
@@ -90,9 +91,6 @@ void		_gedit_cmd_edit_delete			(GSimpleAction *action,
 							 GVariant      *parameter,
 							 gpointer       user_data);
 void		_gedit_cmd_edit_select_all		(GSimpleAction *action,
-							 GVariant      *parameter,
-							 gpointer       user_data);
-void		_gedit_cmd_edit_preferences		(GSimpleAction *action,
 							 GVariant      *parameter,
 							 gpointer       user_data);
 void		_gedit_cmd_edit_overwrite_mode		(GSimpleAction *action,
@@ -156,7 +154,6 @@ void		_gedit_cmd_documents_next_tab_group	(GSimpleAction *action,
 							 GVariant      *parameter,
 							 gpointer       user_data);
 
-void		_gedit_cmd_help_keyboard_shortcuts	(GeditWindow *window);
 void		_gedit_cmd_help_contents		(GeditWindow *window);
 void		_gedit_cmd_help_about			(GeditWindow *window);
 

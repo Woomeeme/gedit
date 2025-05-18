@@ -29,6 +29,7 @@
 #include <string.h>
 #include <glib/gi18n.h>
 #include <gdk/gdkkeysyms.h>
+#include <tepl/tepl.h>
 
 #include "gedit-debug.h"
 #include "gedit-statusbar.h"
@@ -36,7 +37,6 @@
 #include "gedit-tab-private.h"
 #include "gedit-view-frame.h"
 #include "gedit-window.h"
-#include "gedit-window-private.h"
 #include "gedit-utils.h"
 #include "gedit-replace-dialog.h"
 
@@ -98,26 +98,24 @@ static void
 text_found (GeditWindow *window,
 	    gint         occurrences)
 {
+	GeditStatusbar *statusbar = GEDIT_STATUSBAR (gedit_window_get_statusbar (window));
+
 	if (occurrences > 1)
 	{
-		gedit_statusbar_flash_message (GEDIT_STATUSBAR (window->priv->statusbar),
-					       window->priv->generic_message_cid,
-					       ngettext("Found and replaced %d occurrence",
-					     	        "Found and replaced %d occurrences",
-					     	        occurrences),
-					       occurrences);
+		_gedit_statusbar_flash_generic_message (statusbar,
+							ngettext("Found and replaced %d occurrence",
+								 "Found and replaced %d occurrences",
+								 occurrences),
+							occurrences);
 	}
 	else if (occurrences == 1)
 	{
-		gedit_statusbar_flash_message (GEDIT_STATUSBAR (window->priv->statusbar),
-					       window->priv->generic_message_cid,
-					       _("Found and replaced one occurrence"));
+		_gedit_statusbar_flash_generic_message (statusbar,
+							_("Found and replaced one occurrence"));
 	}
 	else
 	{
-		gedit_statusbar_flash_message (GEDIT_STATUSBAR (window->priv->statusbar),
-					       window->priv->generic_message_cid,
-					       " ");
+		_gedit_statusbar_flash_generic_message (statusbar, " ");
 	}
 }
 
@@ -129,15 +127,18 @@ text_not_found (GeditWindow        *window,
 {
 	const gchar *search_text;
 	gchar *truncated_text;
+	GeditStatusbar *statusbar;
 
 	search_text = gedit_replace_dialog_get_search_text (replace_dialog);
-	truncated_text = gedit_utils_str_end_truncate (search_text, MAX_MSG_LENGTH);
+	truncated_text = tepl_utils_str_end_truncate (search_text, MAX_MSG_LENGTH);
 
-	gedit_statusbar_flash_message (GEDIT_STATUSBAR (window->priv->statusbar),
-				       window->priv->generic_message_cid,
-				       /* Translators: %s is replaced by the text
-				          entered by the user in the search box */
-				       _("“%s” not found"), truncated_text);
+	statusbar = GEDIT_STATUSBAR (gedit_window_get_statusbar (window));
+
+	_gedit_statusbar_flash_generic_message (statusbar,
+						/* Translators: %s is replaced by the text entered
+						 * by the user in the search box.
+						 */
+						_("“%s” not found"), truncated_text);
 
 	g_free (truncated_text);
 }
@@ -187,7 +188,7 @@ forward_search_finished (GtkSourceSearchContext *search_context,
 					      &match_start,
 					      &match_end);
 
-		gedit_view_scroll_to_cursor (view);
+		tepl_view_scroll_to_cursor (TEPL_VIEW (view));
 	}
 	else
 	{
@@ -221,6 +222,17 @@ forward_search_from_dialog_finished (GtkSourceSearchContext *search_context,
 	found = forward_search_finished (search_context, result, view);
 
 	finish_search_from_dialog (window, found);
+}
+
+static void
+forward_search_finished_cb (GObject      *source_object,
+			    GAsyncResult *result,
+			    gpointer      user_data)
+{
+	GtkSourceSearchContext *search_context = GTK_SOURCE_SEARCH_CONTEXT (source_object);
+	GeditView *view = GEDIT_VIEW (user_data);
+
+	forward_search_finished (search_context, result, view);
 }
 
 static void
@@ -263,7 +275,7 @@ run_forward_search (GeditWindow *window,
 		gtk_source_search_context_forward_async (search_context,
 							 &start_at,
 							 NULL,
-							 (GAsyncReadyCallback)forward_search_finished,
+							 forward_search_finished_cb,
 							 view);
 	}
 }
@@ -293,7 +305,7 @@ backward_search_finished (GtkSourceSearchContext *search_context,
 					      &match_start,
 					      &match_end);
 
-		gedit_view_scroll_to_cursor (view);
+		tepl_view_scroll_to_cursor (TEPL_VIEW (view));
 	}
 	else
 	{
@@ -327,6 +339,17 @@ backward_search_from_dialog_finished (GtkSourceSearchContext *search_context,
 	found = backward_search_finished (search_context, result, view);
 
 	finish_search_from_dialog (window, found);
+}
+
+static void
+backward_search_finished_cb (GObject      *source_object,
+			     GAsyncResult *result,
+			     gpointer      user_data)
+{
+	GtkSourceSearchContext *search_context = GTK_SOURCE_SEARCH_CONTEXT (source_object);
+	GeditView *view = GEDIT_VIEW (user_data);
+
+	backward_search_finished (search_context, result, view);
 }
 
 static void
@@ -369,7 +392,7 @@ run_backward_search (GeditWindow *window,
 		gtk_source_search_context_backward_async (search_context,
 							  &start_at,
 							  NULL,
-							  (GAsyncReadyCallback)backward_search_finished,
+							  backward_search_finished_cb,
 							  view);
 	}
 }

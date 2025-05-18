@@ -1,5 +1,4 @@
 /*
- * gedit-dirs.c
  * This file is part of gedit
  *
  * Copyright (C) 2008 Ignacio Casal Quinteiro
@@ -19,24 +18,22 @@
  */
 
 #include "config.h"
-
 #include "gedit-dirs.h"
 
-#ifdef OS_OSX
+#if OS_MACOS
 #include <gtkosxapplication.h>
 #endif
 
-static gchar *user_config_dir        = NULL;
-static gchar *user_data_dir          = NULL;
-static gchar *user_styles_dir        = NULL;
-static gchar *user_plugins_dir       = NULL;
-static gchar *gedit_locale_dir       = NULL;
-static gchar *gedit_lib_dir          = NULL;
-static gchar *gedit_plugins_dir      = NULL;
+static gchar *user_config_dir = NULL;
+static gchar *user_data_dir = NULL;
+static gchar *user_plugins_dir = NULL;
+static gchar *gedit_locale_dir = NULL;
+static gchar *gedit_lib_dir = NULL;
+static gchar *gedit_plugins_dir = NULL;
 static gchar *gedit_plugins_data_dir = NULL;
 
 void
-gedit_dirs_init ()
+gedit_dirs_init (void)
 {
 #ifdef G_OS_WIN32
 	gchar *win32_dir;
@@ -60,7 +57,7 @@ gedit_dirs_init ()
 	g_free (win32_dir);
 #endif /* G_OS_WIN32 */
 
-#ifdef OS_OSX
+#if OS_MACOS
 	if (gtkosx_application_get_bundle_id () != NULL)
 	{
 		const gchar *bundle_resource_dir = gtkosx_application_get_resource_path ();
@@ -79,13 +76,11 @@ gedit_dirs_init ()
 							   "plugins",
 							   NULL);
 	}
-#endif /* OS_OSX */
+#endif /* OS_MACOS */
 
 	if (gedit_locale_dir == NULL)
 	{
-		gedit_locale_dir = g_build_filename (DATADIR,
-						     "locale",
-						     NULL);
+		gedit_locale_dir = g_strdup (GEDIT_CONFIG_LOCALE_DIR);
 		gedit_lib_dir = g_build_filename (LIBDIR,
 						  "gedit",
 						  NULL);
@@ -101,9 +96,6 @@ gedit_dirs_init ()
 	user_data_dir = g_build_filename (g_get_user_data_dir (),
 					  "gedit",
 					  NULL);
-	user_styles_dir = g_build_filename (user_data_dir,
-					    "styles",
-					    NULL);
 	user_plugins_dir = g_build_filename (user_data_dir,
 					     "plugins",
 					     NULL);
@@ -113,11 +105,10 @@ gedit_dirs_init ()
 }
 
 void
-gedit_dirs_shutdown ()
+gedit_dirs_shutdown (void)
 {
 	g_clear_pointer (&user_config_dir, g_free);
 	g_clear_pointer (&user_data_dir, g_free);
-	g_clear_pointer (&user_styles_dir, g_free);
 	g_clear_pointer (&user_plugins_dir, g_free);
 	g_clear_pointer (&gedit_locale_dir, g_free);
 	g_clear_pointer (&gedit_lib_dir, g_free);
@@ -135,12 +126,6 @@ const gchar *
 gedit_dirs_get_user_data_dir (void)
 {
 	return user_data_dir;
-}
-
-const gchar *
-gedit_dirs_get_user_styles_dir (void)
-{
-	return user_styles_dir;
 }
 
 const gchar *
